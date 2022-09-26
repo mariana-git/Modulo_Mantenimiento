@@ -1,0 +1,618 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %} {% load crispy_forms_tags %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.0/js/dataTables.bootstrap4.js"></script>
+<link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.css" />
+<link href="{% static '/plugins/color-picker/bootstrap-colorselector.css' %}" rel="stylesheet" />
+<!--jquery confirm-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+{% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %} Detalles de la Solicitud {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <!--#region PRIMERA COLUMNA     col-lg-4  -->
+        <div class="col-lg-4">
+            <!--#region CARD INSPECCION -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-column">
+                       
+                        <div class="row">
+                            <div class="col align-items-center text-center">
+                                <div class="card bg-gradient-light">
+                                    <div class="row">
+                                        <div class="col align-items-center text-center">
+                                            <p class="h4 mt-3 text-muted">
+                                                <b>INSPECCIÓN</b>
+                                                <span id="ticket_id" name="ticket_id" type="hidden"
+                                                    value="{{ticket.id}}"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <hr class="hr2" />
+                                    <div class="row text-left p-2">
+                                        <div class="col  ">
+                                            <p class="lead mt-3 text-center">
+                                                <span id="inspeccion_id" name="inspeccion_id" type="hidden"
+                                                    value="{{i.id}}"></span>
+                                            </p>
+                                            <h5 class="text-center"><b>Sede: {{i.sede |default_if_none:''}}</b>
+                                            </h5>
+                                            <hr class="hr2" />
+                                            <h6 class="mt-1 mb-0"><span class="text-muted">Dirección:
+                                                </span>{{ i.sede.ubicacion |default_if_none:''}} </h6>
+                                            <h6 class="mt-1 mb-0"><span class="text-muted">Piso:
+                                                </span>{{i.piso | default_if_none:''}}</h6>
+                                            <h6 class="mt-1 mb-2"><span class="text-muted">Sector:
+                                                </span>{{i.sector | default_if_none:''}} </h6>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-auto">
+                                                <h6 class="mb-0 text-left">Fecha de Solicitud</h6>
+                                            </div>
+                                            <div class="col-sm-auto text-secondary text-left">
+                                                {{i.fecha_creado.date}}
+                                            </div>
+                                        </div>
+                                        <hr class="hr2" />
+                                        <div class="row">
+                                            <div class="col-sm-auto">
+                                                <h6 class="mb-0 text-left">Sede</h6>
+                                            </div>
+                                            <div class="col-sm-auto text-secondary text-left">
+                                                {{i.sede}}
+                                            </div>
+                                        </div>
+                                        <hr class="hr2" />
+
+                                        
+                                        <div class="row">
+                                            <div class="col-sm-auto">
+                                                <h6 class="mb-0 text-left">Teléfono</h6>
+                                            </div>
+                                            <div class="col-sm-auto text-secondary text-left">
+                                                {{i.telefono |default_if_none:''}}
+                                            </div>
+                                        </div>
+                                        <hr class="hr2" />
+                                        <div class="row">
+                                            <div class="col-sm-auto">
+                                                <h6 class="mb-0 text-left">Email</h6>
+                                            </div>
+                                            <div class="col-sm-auto text-secondary text-left">
+                                                {{i.email |default_if_none:''}}
+                                            </div>
+                                        </div>
+                                        <hr class="hr2" />
+                                        <div class="row mb-4">
+                                            <div class="col-sm-auto">
+                                                <h6 class="mb-0 text-left">Observaciones</h6>
+                                            </div>
+                                            <div class="col-sm-auto text-secondary text-left">
+                                                {{i.obs |default_if_none:''}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-sm">
+                            <div class="card collapsed-card bg-gradient-light">
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-copy pr-2 text-muted"></i>Archivos de la Solicitud
+                                    </h5>
+                                    <div class="card-tools">
+                                        <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                                            <li>
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-body bg-white">
+                                    <div class="row ">
+                                        {% if insp_adjuntos %}
+                                        <div class="table-responsive">
+                                            <table class="table table-sm text-left">
+                                                <tbody>
+                                                    {% for a in insp_adjuntos %}
+                                                    <tr class="h5">
+                                                        {%if 'image' in a.tipo %}
+                                                        <th scope="row"><small><i
+                                                                    class="fas fa-file-image pr-1 text-pink"
+                                                                    title="{{a.nombre}}"></i>{{a.nombre|truncatechars:15}}</small>
+                                                        </th>
+                                                        <td><a href="{% url 'ver_imagenes' a.id a.referencia %}"
+                                                                class="btn btn-tool ml-2"><i
+                                                                    class="fas fa-eye text-muted"
+                                                                    title="Ver imagen"></i></a></td>
+                                                        {%else%}
+                                                        <th scope="row"><small><i
+                                                                    class="fas fa-file-alt pr-1 text-muted"
+                                                                    title="{{a.nombre}}"></i>{{a.nombre|truncatechars:15}}</small>
+                                                        </th>
+                                                        <td><a href="{{a.archivo.url}}" class="btn btn-tool ml-2"
+                                                                target="_blank"><i class="fas fa-eye text-muted"
+                                                                    title="Ver Archivo"></i></a></td>
+                                                        {%endif%}
+                                                        <td><a href="{{a.archivo.url}}" download
+                                                                class="btn btn-tool ml-2"><i class="fas fa-download"
+                                                                    title="Descargar Archivo"></i></a></td>
+                                                        <td><i class="fas fa-trash btn btn-tool ml-2"
+                                                                title="Eliminar Archivo" data-toggle="modal"
+                                                                data-target="#modalBorrar" data-id="{{a.id}}"
+                                                                data-objeto="archivo_{{a.referencia}}"></i>
+                                                        </td>
+                                                    </tr>
+                                                    {%endfor%}
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        {% else %}
+                                        <p class="text-muted pl-2">Sin archivos adjuntos.</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!--#endregion FIN CARD INSPECCION -->
+        </div>
+        <!--#endregion FIN PRIMERA COLUMNA  -->
+        <!--#region SEGUNDA COLUMNA     col-lg-5  -->
+        <div class="col-lg-5">
+            <!--#region CARD VISITA ---------->
+            {% if i.estado_actual == 'ACEPTADA' %}
+            <div class="row">
+                <div class="col">
+                    <div class="card collapsed-card">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <i class="fas fa-file-alt pr-2"></i>Visita de Inspección
+                            </h5>
+                            <div class="card-tools">
+                                <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                                    <li>
+                                        <span class="badge bg-estado-vis d-none d-md-inline">
+                                            {{v.estado_actual|lower|capfirst}}</span>
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="container">
+                                <!-- ESTADO ACTUAL PARA display SM -->
+                                <div class="row justify-content-center m-2">
+                                    <span
+                                        class=" badge d-md-none bg-estado-vis">{{v.estado_actual|lower|capfirst}}</span>
+                                </div>
+                                <!-- FECHA DEL ACTA -->
+                                {% if acta %}
+                                <div class="row mb-3">
+                                    <div class="row m-auto badge p-2 bg-gradient-green">
+                                        <div class="col-auto h4">
+                                            Fecha del Acta: {% firstof acta.fecha_acta.date "sin definir" %}
+                                        </div>
+                                        <div class="col-auto">
+                                            <a class=" btn bg-gradient-light m-2" href="{% url 'ver_acta' acta.id %}">Ver Acta</a>
+                                            
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                <!-- FECHA DE LA VISITA -->
+                                {% elif v.fecha_visita %}
+                                <div class="row mb-3">
+                                    <div class="row m-auto badge p-3 bg-gradient-teal">
+                                        <div class="col-auto h4">
+                                            Fecha de Visita 
+                                        </div>
+                                        <div class="col-auto h4 m-1">
+                                            {% firstof v.fecha_visita.date "sin definir" %}
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                {%endif%}
+                                <!-- ARCHIVOS DE LA VISITA -->   
+                                
+                                {% if vis_adjuntos %}  
+                                <div class="row mb-3">
+                                    <div class="col-sm">
+                                        <div class="card collapsed-card bg-gradient-light">
+                                            <div class="card-header">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-copy pr-2 text-muted"></i>Documentos de la Visita
+                                                </h5>
+                                                <div class="card-tools">
+                                                    <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                                                        <li>
+
+                                                            <button type="button" class="btn btn-tool"
+                                                                data-card-widget="collapse">
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="card-body bg-white">
+                                                <div class="row ">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-sm text-left">
+                                                            <tbody>
+                                                                {% for a in vis_adjuntos %}
+                                                                <tr class="h5">
+                                                                    {%if 'image' in a.tipo %}
+                                                                    <th scope="row"><small><i
+                                                                                class="fas fa-file-image pr-1 text-pink"
+                                                                                title="{{a.nombre}}"></i>{{a.nombre|truncatechars:15}}</small>
+                                                                    </th>
+                                                                    <td><a href="{% url 'ver_imagenes' a.id a.referencia %}"
+                                                                            class="btn btn-tool ml-2"><i
+                                                                                class="fas fa-eye text-muted"
+                                                                                title="Ver imagen"></i></a></td>
+                                                                    {%else%}
+                                                                    <th scope="row"><small><i
+                                                                                class="fas fa-file-alt  pr-1 text-muted"
+                                                                                title="{{a.nombre}}"></i>{{a.nombre|truncatechars:15}}</small>
+                                                                    </th>
+                                                                    <td><a href="{{a.archivo.url}}"
+                                                                            class="btn btn-tool ml-2" target="_blank"><i
+                                                                                class="fas fa-eye text-muted"
+                                                                                title="Ver Archivo"></i></a></td>
+                                                                    {%endif%}
+                                                                    <td><a href="{{a.archivo.url}}" download
+                                                                            class="btn btn-tool ml-2"><i
+                                                                                class="fas fa-download"
+                                                                                title="Descargar Archivo"></i></a></td>
+                                                                    <td><i class="fas fa-trash btn btn-tool ml-2"
+                                                                            title="Eliminar Archivo" data-toggle="modal"
+                                                                            data-target="#modalBorrar"
+                                                                            data-id="{{a.id}}"
+                                                                            data-objeto="archivo_{{a.referencia}}"></i>
+                                                                    </td>
+                                                                </tr>
+                                                                {%endfor%}
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                {% endif %}
+
+                                <!-- TABLA DE ESTADOS -->
+                                <div class="card table-responsive p-2">
+                                    <table class="table table-sm ">
+                                        <thead>
+                                            <tr class="d-flex bg-light">
+                                                <th class="col-12 pl-1 text-secondary">Cambios de estado</th>
+                                            </tr>
+                                            <tr class="d-flex text-secondary">
+                                                <th scope="col" class="col-2 pl-0 ">
+                                                    <small>Fecha</small>
+                                                </th>
+                                                <th scope="col" class="col-4 pl-0 ">
+                                                    <small>Usuario</small>
+                                                </th>
+                                                <th scope="col" class="col-3 pl-0 ">
+                                                    <small>Nuevo Estado</small>
+                                                </th>
+                                                <th scope="col" class="col-1 pl-0 ">
+                                                    <small></small>
+                                                </th>
+                                                <th scope="col" class="col-1 pl-0 ">
+                                                    <small></small>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for e in vis_estados %}
+                                            <tr class="d-flex">
+                                                <td class="col-2 pl-0">
+                                                    <h6>{{e.fecha |date:'d/m/y'}}</h6>
+                                                </td>
+                                                <td class="col-4 pl-0">
+                                                    <h6>{{e.usuario|title }}</h6>
+                                                </td>
+                                                <td class="col-4 pl-0">
+                                                    <h6>{{e.estado}}</h6>
+                                                </td>
+                                                <td class="col-1">
+                                                    <h6 class="p-0 m-0"><span data-toggle="popover"
+                                                            data-container="body" tabindex="0" data-trigger="focus"
+                                                            data-placement="top" data-content="{{e.motivo}}"><i
+                                                                class="fas fa-info-circle text-blue"></i> </span>
+                                                    </h6>
+                                                </td>
+                                                <td class="col-1">
+                                                    <h6 class="p-0 m-0"> <i class="fas fa-trash-alt text-secondary"
+                                                            data-toggle="modal" data-target="#modalBorrar"
+                                                            data-id="{{e.id}}" data-objeto="estado_visita"></i>
+                                                    </h6>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <!--#endregion --------->
+            <!--#region CARD INSPECCION ---------->
+            <div class="row">
+                <div class="col">
+                    <div class="card collapsed-card">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <i class="fas fa-list"></i>&nbsp; Estado de la Solicitud
+                            </h5>
+                            <div class="card-tools">
+                                <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                                    <li>
+                                        <span
+                                            class=" badge d-none d-md-inline bg-estado-insp">{{i.estado_actual|lower|capfirst}}</span>
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="container">
+                                <!-- DATOS -->
+                                <div class="row justify-content-center m-2">
+                                    <span class=" badge d-md-none bg-estado">{{i.estado_actual}}</span>
+                                </div>
+                                <div class="card table-responsive p-2 mt-3">
+                                    <!-- <div class="info-box"> -->
+                                    <table class="table table-sm ">
+                                        <thead>
+                                            <tr class="d-flex bg-light">
+                                                <th class="col-12 pl-1 text-secondary">Cambios de estado</th>
+                                            </tr>
+                                            <tr class="d-flex text-secondary">
+                                                <th scope="col" class="col-2 pl-0 ">
+                                                    <small>Fecha</small>
+                                                </th>
+                                                <th scope="col" class="col-4 pl-0 ">
+                                                    <small>Usuario</small>
+                                                </th>
+                                                <th scope="col" class="col-3 pl-0 ">
+                                                    <small>Nuevo Estado</small>
+                                                </th>
+                                                <th scope="col" class="col-1 pl-0 ">
+                                                    <small></small>
+                                                </th>
+                                                <th scope="col" class="col-1 pl-0 ">
+                                                    <small></small>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for e in insp_estados %}
+                                            <tr class="d-flex">
+                                                <td class="col-2 pl-0">
+                                                    <h6>{{e.fecha |date:'d/m/y'}}</h6>
+                                                </td>
+                                                <td class="col-4 pl-0">
+                                                    <h6>{{e.usuario|title }}</h6>
+                                                </td>
+                                                <td class="col-4 pl-0">
+                                                    <h6>{{e.estado}}</h6>
+                                                </td>
+                                                <td class="col-1">
+                                                    <h6 class="p-0 m-0"><span data-toggle="popover"
+                                                            data-container="body" tabindex="0" data-trigger="focus"
+                                                            data-placement="top" data-content="{{e.motivo}}"><i
+                                                                class="fas fa-info-circle text-blue"></i> </span>
+                                                    </h6>
+                                                </td>
+                                                <td class="col-1">
+                                                    <h6 class="p-0 m-0"> <i class="fas fa-trash-alt text-secondary"
+                                                            data-toggle="modal" data-target="#modalBorrar"
+                                                            data-id="{{e.id}}" data-objeto="estado_inspeccion"></i>
+                                                    </h6>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- FIN DATOS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--#endregion FIN card cambios de estados --------->
+        </div>
+        <!--#endregion FIN SEGUNDA COLUMNA  -->
+        <!--#region TERCERA COLUMNA     col-lg-3  -->
+        <div class="col-lg-3">
+            <!--#region CARD ESTADOS -->
+            <div class="card">
+                <div class="card-header bg-secondary">
+                    <h5 class="card-title">
+                        <i class="fas fa-bell pr-1"></i>
+                        Actualizaciones
+                    </h5>
+                </div>
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action"
+                        onclick="cambiar_estado('{{i.id}}','{{opcion|upper}}')"><i class="fas fa-sync pr-1"></i>
+                        Estado de la {{opcion}}</a>
+                </div>
+            </div>
+            <!--#endregion Fin Card Estado Ticket -->
+            <!--#region CARD ACCIONES -->
+            <div class="card">
+                <div class="card-header bg-primary">
+                    <h5 class="card-title">
+                        <i class="fas fa-check-circle pr-1"></i>Acciones
+                    </h5>
+                </div>
+                {% if v %}
+                <div class="list-group">
+                    <a href="{% url 'agregar_acta' v.id %}" class="list-group-item list-group-item-action"><i
+                            class="fas fa-edit pr-1"></i>Acta de Inspección</a>
+                </div>
+                {% else %}
+                <div class="list-group">
+                    <a href="{% url 'modificar_inspeccion' i.id %}" class="list-group-item list-group-item-action"><i
+                            class="fas fa-edit pr-1"></i>Modificar Inspección</a>
+                </div>                
+                {% endif %}
+            </div>
+            <!--#endregion Fin Card Acciones -->
+            <!--#region CARD BORRAR -->
+            <div class="card">
+                <div class="card-header bg-gradient-danger">
+                    <h5 class="card-title">
+                        <a href="#" data-toggle="modal" data-target="#modalBorrar" data-objeto="{{opcion|lower}}"
+                            class="text-white"><i class="fas fa-minus-circle"></i> Borrar {{opcion}}</a>
+                    </h5>
+                </div>
+            </div>
+            <!--#endregion Fin Card Borrar -->
+        </div>
+        <!--#endregion FIN TERCERA COLUMNA  -->
+    </div>
+</div>
+<!--#region --------------------------------MODALES----------------------------------------------  -->
+<!-- Modal BORRAR -->
+<div class="modal fade" id="modalBorrar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-danger">
+                <h5 class="modal-title" id="exampleModalLabel">Esta seguro que quiere borrar?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <form action="#" method="POST">
+                    {% csrf_token %}
+                    <input id="id_objeto_borrar" name="id_objeto_borrar" type="hidden" value="">
+                    <input id="objeto_borrar" name="objeto_borrar" type="hidden" value="">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    &nbsp;&nbsp;&nbsp;
+                    <button type="submit" name="borrado" class="btn btn-danger">Borrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion  -->
+
+{% endblock content%}
+
+{% block customJS %}
+
+<script>
+    $(document).ready(function () {
+
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+
+        $('.popover-dismiss').popover({
+            trigger: 'focus'
+        })
+
+        //cambio color del badge del estado de la inspeccion    
+        $('.bg-estado-insp').addClass(function () {
+            let estado = '{{i.estado_actual}}';
+
+            if (estado == 'EN EVALUACIÓN') {
+                $(this).addClass('bg-gradient-orange');
+            } else if (estado == 'ACEPTADA') {
+                $(this).addClass('bg-gradient-green');
+            } else if (estado == 'RECHAZADA') {
+                $(this).addClass('bg-gradient-danger');
+            } else {
+                $(this).addClass('bg-gradient-info');
+            }
+        });
+
+        //cambio color del badge del estado de la visita    
+        $('.bg-estado-vis').addClass(function () {
+            let estado = '{{v.estado_actual}}';
+            if (estado == 'DEMORADA') {
+                $(this).addClass('bg-gradient-danger');
+            } else if (estado == 'PROGRAMADA') {
+                $(this).addClass('bg-gradient-orange');
+            } else if (estado == 'A DEFINIR') {
+                $(this).addClass('bg-gradient-yellow');
+            } else if (estado == 'FINALIZADA') {
+                $(this).addClass('bg-gradient-green');
+            } else {
+                $(this).addClass('bg-gradient-info');
+            }
+        });
+
+        $('#modalBorrar').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var obj = button.data('objeto')
+            var modal = $(this)
+
+            modal.find('#id_objeto_borrar').attr("value", id)
+            modal.find('#objeto_borrar').attr("value", obj)
+        });
+
+    });
+
+</script>
+
+<script>
+    function cambiar_estado(id, origen) {
+        $.confirm({
+            title: 'Actualizar estado',
+            content: 'url:/modulo4/cambiar-estado/' + id + '/' + origen + '/',
+            theme: 'bootstrap',
+            type: 'blue',
+            buttons: false,
+        });
+    };
+
+
+</script>
+{% endblock customJS %}

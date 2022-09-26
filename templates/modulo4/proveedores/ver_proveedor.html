@@ -1,0 +1,475 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %}
+<link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.css" />
+<link rel="stylesheet" type="text/css" href="{% static '/plugins/color-picker/bootstrap-colorselector.css' %}" />
+<!--jquery confirm-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+
+<script type="text/javascript" src="{% static '/plugins/color-picker/bootstrap-colorselector.js' %}"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.0/js/dataTables.bootstrap4.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+
+<!--jquery Datatable buttons -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+
+<script type="text/javascript" language="javascript"
+    src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" language="javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" language="javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" language="javascript"
+    src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript"
+    src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.print.min.js"></script>
+{% endblock custom_head %}
+
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %} Proveedor / Detalle {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+<div class="container">
+    <div class="card table-responsive">
+        <div class="card-header">
+            <h5 class="card-title">
+                <i class="fas fa-users pr-3"></i>Proveedor: {{ p.nombre }}
+            </h5>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+            <!-- /.card-tools -->
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body p-2">
+            <div class="container">
+                <div class="row d-flex justify-content-center mt-3">
+                    <div class="col-lg-6 flex-column">
+                        <div class="card collapsed-card">
+                            <div class="card-header">
+                                <h5 class="card-title ">
+                                    <i class="fas fa-info-circle pr-2 text-muted"></i>Datos del Proveedor
+                                </h5>
+                                <div class="card-tools">
+                                    <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                                        <li>
+
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body bg-white">
+                                <div class="row text-left">
+                                    <div class="flex-column d-flex">
+                                        <div class="container">
+
+                                            <div class="row mt-3">
+                                                <div class="col-sm-auto">
+                                                    <h6 class="text-left">Dirección</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-secondary text-left">
+                                                    {{ p.calle | default_if_none:'sin datos' }}
+                                                </div>
+                                                <div class="col text-secondary text-left">
+                                                    {{ p.altura | default_if_none:'sin datos' }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-auto">
+                                                    <h6 class="text-left">Barrio/Localidad</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-secondary text-left">
+                                                    {{ p.barrio | default_if_none:'sin datos' }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-auto">
+                                                    <h6 class="text-left">CP</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-secondary text-left">
+                                                    {{ p.cp | default_if_none:'sin datos' }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-auto">
+                                                    <h6 class="text-left">Distrito</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-secondary text-left">
+                                                    {{ p.provincia | default_if_none:'sin datos' }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-auto">
+                                                    <h6 class="text-left">Teléfono</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-secondary text-left">
+                                                    {{ p.telefono | default_if_none:'sin datos' }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-auto">
+                                                    <h6 class="text-left">Email</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-secondary text-left">
+                                                    {{ p.email | default_if_none:'sin datos' }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-auto">
+                                                    <h6 class="text-left">Observaciones</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-secondary text-left">
+                                                    {{ p.obs | default_if_none:'sin datos' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 flex-column">
+                        <div class="row">
+                            <div class="col-sm">
+                                <div class="card collapsed-card">
+                                    <div class="card-header">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-copy pr-2 text-muted"></i>Documentos del Proveedor
+                                        </h5>
+                                        <div class="card-tools">
+                                            <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                                                <li>
+
+                                                    <button type="button" class="btn btn-tool"
+                                                        data-card-widget="collapse">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body bg-white">
+                                        <div class="row ">
+                                            {% if pr_adjuntos %}
+
+                                            <div class="table-responsive">
+                                                <table class="table table-sm text-left">
+
+                                                    <tbody>
+
+                                                        {% for a in pr_adjuntos %}
+                                                        <tr class="h5">
+                                                            {%if 'image' in a.tipo %}
+                                                            <th scope="row"><small><i
+                                                                        class="fas fa-file-image text-muted pr-1 text-pink"
+                                                                        title="{{a.nombre}}"></i>{{a.nombre|truncatechars:15}}</small>
+                                                            </th>
+                                                            <td><a href="{% url 'ver_imagenes' a.id a.referencia %}"
+                                                                    class="btn btn-tool ml-2"><i
+                                                                        class="fas fa-eye text-muted"
+                                                                        title="Ver imagen"></i></a></td>
+                                                            {%else%}
+                                                            <th scope="row"><small><i
+                                                                        class="fas fa-file-alt  pr-1 text-muted"
+                                                                        title="{{a.nombre}}"></i>{{a.nombre|truncatechars:15}}</small>
+                                                            </th>
+                                                            <td><a href="{{a.archivo.url}}" class="btn btn-tool ml-2"
+                                                                    target="_blank"><i class="fas fa-eye text-muted"
+                                                                        title="Ver Archivo"></i></a></td>
+                                                            {%endif%}
+                                                            <td><a href="{{a.archivo.url}}" download
+                                                                    class="btn btn-tool ml-2"><i class="fas fa-download"
+                                                                        title="Descargar Archivo"></i></a></td>
+                                                            <td><i class="fas fa-trash btn btn-tool ml-2"
+                                                                    title="Eliminar Archivo" data-toggle="modal"
+                                                                    data-target="#modalBorrar" data-id="{{a.id}}"
+                                                                    data-objeto="archivo_{{a.referencia}}"></i></td>
+                                                        </tr>
+                                                        {%endfor%}
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            {% else %}
+                                            <div class="row">
+                                                <p class="text-muted pl-2">Sin archivos adjuntos.</p>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-end d-flex">
+                    <a href="{% url 'modificar_proveedor' p.id %}" class="text-secondary">
+                        <button class="btn btn-primary m-2" type="button">Actualizar datos</button>
+                    </a>
+                </div>
+                <div class="card table-responsive p-2 mt-3">
+                    <!-- <div class="info-box"> -->
+                    <!-- <table class="table table-sm "> -->
+                    <table id="listado" class="table dataTable compact hover order-column " style="width: 100%"
+                        data-page-length='25'>
+                        <thead>
+                            <tr class="bg-light">
+                                <th colspan='12' class=" text-left text-secondary">Órdenes de Trabajo </th>
+                            </tr>
+                            <tr class="text-secondary text-center">
+                                <th scope="col" class="align-middle">
+                                    <small>#</small>
+                                </th>
+                                <th scope="col" class="align-middle">
+                                    <small>Asignada</small>
+                                </th>
+                                <th scope="col" class="align-middle">
+                                    <small>Inicio</small>
+                                </th>
+                                <th scope="col" class="align-middle">
+                                    <small>Fin</small>
+                                </th>
+                                <th scope="col" class="align-middle">
+                                    <small>Reprog.</small>
+                                </th>
+                                <th scope="col" class="align-middle">
+                                    <small>Fin Real</small>
+                                </th>
+                                <th scope="col" class="align-middle">
+                                    <small>Estado Actual</small>
+                                </th>
+                                <th scope="col" class="align-middle">
+                                    <small>$ Aprobado</small>
+                                </th>
+                                <th scope="col" class="align-middle">
+                                    <small>$ Ejecutado</small>
+                                </th>
+                                <th scope="col" class="align-middle">
+                                    <small>$ En Ejecución</small>
+                                </th>
+                                <th scope="col" class="align-middle">
+                                    <small>$ Pendiente</small>
+                                </th>
+                                <th scope="col" class="align-middle">
+                                    <small>Ver</small>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for o in ots %}
+                            <tr class="text-center h6">
+                                <td>
+                                    {{o.id }}
+                                </td>
+                                <td>
+                                    {{o.fecha_asignacion |date:'d/m/y'}}
+                                </td>
+                                <td>
+                                    {{o.fecha_inicio |date:'d/m/y'}}
+                                </td>
+                                <td>
+                                    {{o.fecha_fin_prevista |date:'d/m/y'}}
+                                </td>
+                                <td>
+                                    {{o.reprogramaciones}}
+                                </td>
+                                <td>
+                                    {{o.fecha_finalizacion |date:'d/m/y'}}
+                                </td>
+                                <td>
+                                    {{o.estado_actual}}</h6>
+                                </td>
+                                <td class='text-right'>
+                                    {{o.presup_aprobado | default_if_none:'0'}}
+                                </td>
+                                <td class='text-right'>
+                                    {{o.presup_ejecutado | default_if_none:'0'}}
+                                </td>
+                                <td class='text-right'>
+                                    {{o.presup_en_ejecucion| default_if_none:'0' }}
+                                </td>
+                                <td class='text-right'>
+                                    {{o.presup_pendiente| default_if_none:'0' }}
+                                </td>
+
+                                <td class='text-center'>
+                                    <a href="{% url 'ticket' o.ticket.id %}" class="text-secondary">
+                                        <i class="fas fa-eye" title="Ver Orden"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="h6 text-right">
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>Totales</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- FIN DATOS -->
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer"></div>
+            <!-- /.card-footer -->
+        </div>
+    </div>
+</div>
+
+<!--#region ------------------------------MODALES------------------------------------------------------------  -->
+
+
+
+<!--#region MODAL BORRAR -->
+<div class="modal fade" id="modalBorrar" tabindex="-1" role="dialog" aria-labelledby="BorrarModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-danger">
+                <h5 class="modal-title">Esta seguro que quiere borrar?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <p action="#" method="POST">
+                    {% csrf_token %}
+                    <input id="id_objeto_borrar" name="id_objeto_borrar" type="hidden" value="">
+                    <input id="objeto_borrar" name="objeto_borrar" type="hidden" value="">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    &nbsp;&nbsp;&nbsp;
+                    <button type="submit" name="borrado" class="btn btn-danger">Borrar</button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion Fin modal Borrar Ticket -->
+
+<!--#endregion MODALES -->
+{% endblock content%}
+{% block customJS %}
+
+
+<script>
+    $(document).ready(function () {
+
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+
+        $('.popover-dismiss').popover({
+            trigger: 'focus'
+        })
+
+
+        $('#modalBorrar').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var obj = button.data('objeto')
+            var modal = $(this)
+
+            modal.find('#id_objeto_borrar').attr("value", id)
+            modal.find('#objeto_borrar').attr("value", obj)
+        });
+
+
+        $("#listado").DataTable({
+            columnDefs: [
+                {
+                    "targets": [],
+                    "visible": false,
+                    "searchable": false
+                }
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+            {
+                //Botón para Excel
+                extend: 'excel',
+                footer: true,
+                title: 'SIS - Proveedores',
+                filename: 'SIS - Proveedores',
+                text: '<button class="btn btn-success"><i class="fas fa-file-excel"></i></button>'
+                },
+                //Botón para PDF
+                {
+                    extend: 'pdf',
+                    footer: true,
+                    title: 'SIS - Proveedores',
+                    filename: 'SIS - Proveedores',
+                    text: '<button class="btn btn-danger"><i class="fas fa-file-pdf"></i></button>',
+                    orientation: 'landscape'
+                },
+                //Botón para Imprimir
+                {
+                    extend: 'print',
+                    footer: true,
+                    title: 'SIS - Proveedores',
+                    filename: 'SIS - Proveedores',
+                    text: '<button class="btn btn-primary"><i class="fas fa-print"></i></button>',
+                    orientation: 'landscape'
+                }
+            ],
+            ordering: true,
+            language: {
+                lengthMenu: "Mostrar _MENU_ filas por página.",
+                zeroRecords: "No se encontraron registros.",
+                info: "Página _PAGE_ de _PAGES_",
+                infoEmpty: "No hay registros disponibles",
+                infoFiltered: "(filtrado por _MAX_ registros.)",
+                search: "Buscar:",
+                paginate: {
+                    next: "Siguiente",
+                    previous: "Anterior",
+                },
+            },
+            "footerCallback": function (tfoot, data, start, end, display) {
+                var api = this.api();
+                var columnas = [7, 8, 9,10]; //columnas sobre las que calculo importes totales
+                $.each(columnas, function (index, value) {
+                    $(api.column(value).footer()).html('$ ' +
+                        api.column(value).data().reduce(function (a, b) {
+                            b = b.replace(',', '.')
+                            var x = parseFloat(a);
+                            var y = parseFloat(b);
+                            return x + y;
+                        }, 0).toFixed(2));
+                });
+            }
+
+        });
+    });
+
+</script>
+
+{% endblock customJS %}

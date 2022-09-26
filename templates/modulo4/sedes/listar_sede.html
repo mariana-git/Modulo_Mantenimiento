@@ -1,0 +1,137 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %}
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.0/js/dataTables.bootstrap4.js"></script>
+<link rel="stylesheet" type="text/css"
+  href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.css" />
+{% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %}Sedes / Listar sedes{%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h5 class="card-title">
+        <i class="fas fa-building"></i>&nbsp; Sedes
+      </h5>
+
+      <div class="card-tools">
+        <ul class="list-unstyled mb-0 d-flex justify-content-center">
+          <li>
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+              <i class="fas fa-minus"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="d-flex flex-column">
+
+
+
+        <div class="card-deck">
+          <div class="row row-cols-1 row-cols-md-5">
+
+            {% for s in sedes %}
+            <div class="col mb-3">
+              <div class="card bg-light">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col text-center">
+                      <a href="{% url 'detalle_sede' s.id %}" class="text-secondary">
+                        <h5 class="h5">{{ s.nombre }}</h5>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col text-left">
+                      <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                        <li>&nbsp;&nbsp;<a href="#" class="bg_primary" id="{{s.id | title}}"><i
+                              class="fas fa-info-circle"></i></a></li>
+                        <!--<li>&nbsp;&nbsp;<a href="{% url 'modificar_sede' s.id %}" class="icono_custom_primary"><i
+                              class="fas fa-edit"></i></a></li>-->
+                        <li>
+                          &nbsp;&nbsp;<a href="{% url 'detalle_sede' s.id %}" class="icono_custom_primary"><i
+                              class="fas fa-building"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+{% endblock content%}
+{% block customJS %}
+{% for s in sedes %}
+<script>
+
+  $(document).on("click", "#{{s.id | title }}", function (e) {
+    Swal.fire({
+      showCloseButton: true,
+      showConfirmButton: false,
+      width: 'auto',
+      html: '<div class="row">' +
+        '  <div class="col align-items-center text-center perfil-align">' +
+        '    {% if s.portada == None %}' +
+        '    <img src="../../../media/portada.png" alt="avatar" alt="avatar" class="" height="100" id="foto" />' +
+        '    {% else %}' +
+        '    <img src="../../../media/{{s.portada}}" alt="avatar" alt="avatar" class="" height="100" id="foto" />' +
+        '    {% endif %}' +
+        '  </div>' +
+        '</div>' +
+
+        '<div class="row">' +
+        '  <div class="col align-items-center text-center">' +
+        '    <hr class="hr2" />' +
+        '    <p class="lead">' +
+        '      <b>{{s.nombre}}</b>' +
+        '  </div>' +
+        '</div>' +
+        '<div class="row">' +
+        '    <div class="col-sm-auto">' +
+        '      <h6 class="mb-0 text-left">Direccion</h6>' +
+        '    </div>' +
+        '    <div class="col-sm-auto text-secondary text-left">' +
+        '      <h5 class="mb-0 text-left">{{s.calle |default_if_none:""}} {{s.altura |default_if_none:""}}</h5>' +
+        '    </div>' +
+        '  </div>' +
+        '<div class="row">' +
+        '    <div class="col-sm-auto">' +
+        '      <h6 class="mb-0 text-left">Teléfono</h6>' +
+        '    </div>' +
+        '    <div class="col-sm-auto text-secondary text-left">' +
+        '      <h5 class="mb-0 text-left">{{s.telefono |default_if_none:""}}</h5>' +
+        '    </div>' +
+        '  </div>' +
+        '<div class="row">' +
+        '    <div class="col-sm-auto">' +
+        '      <h6 class="mb-0 text-left">Barrios</h6>' +
+        '    </div>' +
+        '    <div class="col-sm-auto text-secondary text-left">' +
+        '      <h5 class="mb-0 text-left">{{s.barrios |default_if_none:""}}</h5>' +
+        '    </div>' +
+        '  </div>'
+    });
+  });
+</script>
+{% endfor %}
+{% endblock customJS %}

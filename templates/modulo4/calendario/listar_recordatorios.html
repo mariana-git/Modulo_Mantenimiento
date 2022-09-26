@@ -1,0 +1,372 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %} {% load crispy_forms_tags %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.0/js/dataTables.bootstrap4.js"></script>
+<link rel="stylesheet" type="text/css"
+  href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.css" />
+<link href="{% static '/plugins/color-picker/bootstrap-colorselector.css' %}" rel="stylesheet" />
+<!--jquery confirm-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+{% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %} Tareas Pendientes {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+<div class="container">
+  <div class="card table-responsive">
+    <div class="card-header">
+      <h5 class="card-title">
+        <span class="align-middle"><i class="fas fa-calendar-check"></i>&nbsp; Recordatorios</span>
+      </h5>
+      <div class="card-tools mb-0">
+        <!-- Buttons, labels, and many other things can be placed here! -->
+        <a href="#" data-toggle="modal" data-target="#modalCrearTarea" class="btn btn-sm bg-primary mb-0 mt-0">
+          <i class="fas fa-plus"></i> Agregar recordatorio
+        </a>
+        <!-- Here is a label for example -->
+        <button type="button" class="btn btn-tool" data-card-widget="maximize">
+          <i class="fas fa-expand"></i>
+        </button>
+      </div>
+      <!-- /.card-tools -->
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <ul class="todo-list ui-sortable" data-widget="todo-list">
+        {% for t in tareas %}
+        <li>
+          <!-- drag handle -->
+          {% if t.completo == False %}
+          <span class="" style="color: {{t.color}};"><i class="fas fa-stop"></i></span>
+          {%else%}
+          <span class="" style="color: lightgray"><i class="fas fa-stop"></i></span>
+          {% endif %}
+          </span>
+          <!-- checkbox -->
+          <div class="icheck-primary d-inline ml-2">
+            <input style="display: none;" type="checkbox" value="" name="todo1" id="todoCheck1" {% if t.completo == True %} checked {% endif %}>
+            <label for="todoCheck1"></label>
+          </div>
+          <!-- todo text -->
+          <span class="text">
+            <a href="#" data-toggle="modal" data-target="#modalVerTarea" data-titulo="{{t.titulo}}"
+              data-color="{{t.color}}" data-fecha="{{t.fecha}}" data-hora="{{t.hora}}" data-minutos="{{t.minutos}}"
+              data-detalles="{{t.detalles}}" data-id="{{t.id}}" data-fecha="{{ t.fecha |date:'d/m/y' }}"
+              data-completo="{{ t.completo}}" class="text-secondary">{{ t.titulo }}</span>
+
+          <!-- Emphasis label -->
+          {% if t.completo == True %}
+          <small class="badge badge-secondary"><i class="fas fa-check-circle"></i> Resuelto</small>
+          {% else %}
+          <small class="badge badge-info"><i class="fas fa-calendar-alt"></i> {{ t.fecha |date:"d/m/y"}}</small>
+          {% now "Y/m/d" as hoy %}
+          {% if hoy > t.fecha|date:"Y/m/d" %}
+          <small class="badge badge-danger"><i class="fas fa-exclamation-triangle"></i> Vencido</small>
+          {% else %}
+          <small class="badge badge-warning"><i class="fas fa-exclamation-circle"></i> Pendiente</small>
+          {% endif %}
+          {% endif %}
+          </a>
+
+          <!-- iconos de borrar y editar -->
+          <div class="tools">
+            <i class="fas fa-edit" onclick="editar_tarea({{t.id}})"></i>
+            <i class="fas fa-trash-alt" data-toggle="modal" data-target="#modalBorrarTarea" data-id="{{t.id}}"></i>
+          </div>
+        </li>
+        {% empty %}
+        <li>
+          <span class="text">No se encontraron pendientes.</span>
+        </li>
+        {% endfor %}
+
+      </ul>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer"></div>
+    <!-- /.card-footer -->
+  </div>
+</div>
+
+
+<!----------------------- MODALES ------------------------->
+
+<!--#region MODAL CREAR TAREA -->
+<div class="modal fade" id="modalCrearTarea" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-gradient-dark">
+        <h4 class="modal-title modal-dialog-centered" id="exampleModalLabel"><i
+            class="fas fa-sticky-note"></i>&nbsp;&nbsp; Crear Recordatorio</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'listar_recordatorios' %}" method="POST">
+          {% csrf_token %}
+
+          <div class="col-lg-12">
+            <div class="row">
+              <div class="col-sm-auto">
+                <h6 class="mt-2 text-left">Titulo *</h6>
+              </div>
+              <div class="col text-secondary text-left">
+                {{ post.titulo| as_crispy_field }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-calendar-alt"></i> Fecha *</h6>
+              </div>
+              <div class="col-sm-auto text-secondary text-left">
+                {{ post.fecha| as_crispy_field }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-clock"></i> Hora</h6>
+              </div>
+              <div class="col-sm-auto text-secondary text-left">
+                {{ post.hora| as_crispy_field }}
+              </div>
+              <div class="col-sm-auto text-secondary text-left">
+                {{ post.minutos| as_crispy_field }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-info-circle"></i> Color</h6>
+              </div>
+              <div class="col text-secondary text-left">
+
+                <select id="id_color" name="color">
+                  <option value="#0095e5" data-color="#0095e5">Celeste</option>
+                  <option value="#00b65e" data-color="#00b65e" selected="selected">Verde</option>
+                  <option value="#f69c18" data-color="#f69c18">Naranja</option>
+                  <option value="#fbc719" data-color="#fbc719">Orange</option>
+                  <option value="#f54a26" data-color="#f54a26">Rojo</option>
+                  <option value="#cf4594" data-color="#cf4594">Rosa</option>
+                  <option value="#8955ba" data-color="#8955ba">Lila</option>
+                  <option value="#635bc8" data-color="#635bc8">Violeta</option>
+                  <option value="#143d6b" data-color="#143d6b">Azul</option>
+                  <option value="#ccd622" data-color="#ccd622">Lima</option>
+                </select>
+
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-info-circle"></i> Detalles</h6>
+              </div>
+              <div class="col text-secondary text-left">
+                {{ post.detalles| as_crispy_field }}
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+
+        <!-- Botones -->
+        <div class="row">
+          <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            &nbsp;&nbsp;&nbsp;
+            <button name="agregar_tarea" type="submit" class="btn btn-primary">Agregar</button>
+          </div>
+        </div>
+        <!-- FIN Botones --------->
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- #endregion -->
+
+
+<!--#region MODAL VER TAREA -->
+<div class="modal fade" id="modalVerTarea" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header" id="tarea-color">
+        <h4 class="modal-title modal-dialog-centered text-white"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-sm-auto">
+              <h6 class="mt-2 text-left"><i class="fas fa-info-circle"></i> Detalles</h6>
+            </div>
+            <div class="col text-secondary text-left">
+              <h4 class="mt-2 m-detalles"></h4>
+            </div>
+          </div>
+          <hr class="hr2" />
+          <div class="row">
+            <div class="col-sm-auto">
+              <h6 class="mt-2 text-left"><i class="fas fa-calendar-alt"></i> Fecha</h6>
+            </div>
+            <div class="col text-secondary text-left">
+              <h4 class="mt-2 m-fecha"></h4>
+            </div>
+          </div>
+          <hr class="hr2" />
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-auto">
+                  <h6 class="mt-2 text-left"><i class="fas fa-clock"></i> Hora</h6>
+                </div>
+                <div class="col-sm-auto text-secondary text-left">
+                  <h4 class="mt-2 "><span class="m-hora"></span>:<span class="m-minutos"></span></h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="row">
+                <div class="col-sm-auto">
+                  <h6 class="mt-2 text-left"><i class="fas fa-check-circle"></i> Estado</h6>
+                </div>
+                <div class="col-sm-auto text-secondary text-left">
+                  <h4 class="mt-2"><span class="e-color"><span class="m-estado"></span></span></h6>
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+
+        <!-- Botones -->
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="row">
+            <div class="d-flex justify-content-center">
+              <input id="post_id" name="post_id" class="modal-id" type="hidden" value="">
+              <button name="borrar_tarea" type="submit" class="btn btn-danger">Borrar</button>
+
+              &nbsp;&nbsp;&nbsp;
+              <button id="btn-editar-tarea" type="button" class="btn btn-primary" data-dismiss="modal">Editar</button>
+              &nbsp;&nbsp;&nbsp;
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+          </div>
+        </form>
+        <!-- FIN Botones --------->
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--#endregion Modal Ver Tarea -->
+
+
+<!--#region MODAL BORRAR -->
+<div class="modal fade" id="modalBorrarTarea" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-gradient-danger">
+        <h5 class="modal-title" id="exampleModalLabel">Confirma borrado?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <form action="#" method="POST">
+          {% csrf_token %}
+          <input id="post_id" name="post_id" class="modal-id" type="hidden" value="">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          &nbsp;&nbsp;&nbsp;
+          <button type="submit" name="borrar_tarea" class="btn btn-danger">Borrar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- #endregion -->
+
+{% endblock content%}
+
+{% block customJS %}
+
+<script src="{% static '/plugins/color-picker/bootstrap-colorselector.js' %}"></script>
+
+<script>
+  $('#modalBorrarTarea').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var modal = $(this)
+    modal.find('.modal-id').attr("value", id)
+  });
+
+  $('#modalVerTarea').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var id = button.data('id')
+    var color = button.data('color')
+    var titulo = button.data('titulo')
+    var fecha = button.data('fecha')
+    var hora = button.data('hora')
+    var minutos = button.data('minutos')
+    var detalles = button.data('detalles')
+    var completo = button.data('completo')
+    var modal = $(this)
+
+    if (completo == 'False') {
+      estado = 'Pendiente'
+      $(function () {
+        $("#modalVerTarea .e-color").attr("class", "badge badge-warning");
+      });
+    } else {
+      estado = 'Resuelta'
+      $(function () {
+        $("#modalVerTarea .e-color").attr("class", "badge badge-secondary");
+      });
+    }
+
+    modal.find('.modal-id').attr("value", id)
+    modal.find('.modal-title').html(titulo)
+    modal.find('.m-color').html(color)
+    modal.find('.m-fecha').html(fecha)
+    modal.find('.m-hora').html(hora)
+    modal.find('.m-minutos').html(minutos)
+    modal.find('.m-detalles').html(detalles)
+    modal.find('.m-estado').html(estado)
+    $('#btn-editar-tarea').attr("onclick", "editar_tarea(" + id + ")")
+    $('#tarea-color').attr("style", "background-color:" + color);
+  });
+
+  $(function () {
+    window.prettyPrint && prettyPrint();
+    $('#id_color').colorselector();
+    $('#id_color_edit').colorselector()
+  });
+
+</script>
+
+<script>
+  function editar_tarea(id) {
+    $.confirm({
+      title: 'Editar Recordatorio',
+      content: 'url:/modulo4/editar-recordatorio/' + id + '/',
+      theme: 'bootstrap',
+      type: 'black',
+      buttons: false,
+    });
+  };
+</script>
+
+{% endblock customJS %}

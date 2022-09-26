@@ -1,0 +1,119 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %}
+{% load crispy_forms_tags %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %} {% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %} Inspección / {{accion}}  {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+
+<div class="container">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <!-- COLUMNA TICKET-->
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-toolbox pr-2"></i>Complete los siguientes datos
+                        </h5>
+                        <div class="card-tools">
+                            <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                                <li>
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-column mt-3">
+                            <div class="row">
+                                <div class="col-md-8 m-auto">
+                                    <div class="col align-items-center text-center">
+                                        <div class="card ">
+                                            <div class="container p-3">
+
+                                                {{form.usuario.as_hidden}}
+                                                <div class="row mt-5">
+                                                    <div class="col-sm-auto">
+                                                        <h6 class="mt-2 text-left">Sede</h6>
+                                                    </div>
+                                                    <div class="col text-secondary text-left">
+                                                        {{ form.sede| as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-sm-auto">
+                                                        <h6 class="mt-2 text-left">Piso</h6>
+                                                    </div>
+                                                    <div class="col text-secondary text-left">
+                                                        {{ form.piso| as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-auto">
+                                                        <h6 class="mt-2 text-left">Sector</h6>
+                                                    </div>
+                                                    <div class="col text-secondary text-left">
+                                                        {{ form.sector| as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-sm-auto">
+                                                        <h6 class="mt-2 text-left">Observaciones</h6>
+                                                    </div>
+                                                    <div class="col text-secondary text-left">
+                                                        {{ form.obs | as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row mt-3 mb-3">
+                                                    <div class="col-sm-auto">
+                                                        <h6 class="align-baseline text-left">Agregar documentos</h6>
+                                                    </div>
+                                                    <div class="col text-secondary text-left ">
+                                                        {{ form.archivos| as_crispy_field }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-center mt-3">
+                            <input type="submit" value="{{accion}}" class="btn btn-primary mr-2" />
+                            <input type="reset" value="Borrar" class="btn btn-secondary mr-2" />
+                           
+                        </div>
+                        <!-- FIN Botones --------->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock content%}
+{% block customJS %}
+<script>
+    $(document).ready(function () {
+        
+
+        
+    });
+
+</script>
+
+{% endblock customJS %}

@@ -1,0 +1,85 @@
+{% load crispy_forms_tags %}
+<form action="" method="POST">
+    {% csrf_token %}
+
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-sm-auto">
+
+                <h6 class="mt-2 text-left">Titulo *</h6>
+            </div>
+            <div class="col text-secondary text-left">
+                <input type="hidden" name="id" id="id" value='{{ cap.id }}'>
+                {{ post.titulo | as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-calendar-alt"></i> Fecha *</h6>
+            </div>
+            <div class="col-sm-auto text-secondary text-left">
+                {{ post.fecha | as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-clock"></i> Hora</h6>
+            </div>
+            <div class="col-sm-auto text-secondary text-left">
+                {{ post.hora | as_crispy_field }}
+            </div>
+            <div class="col-sm-auto text-secondary text-left">
+                {{ post.minutos | as_crispy_field }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-info-circle"></i> Color</h6>
+            </div>
+            <div class="col text-secondary text-left">
+                <select id="id_color_editar" name="color">
+                    <option value="#0095e5" data-color="#0095e5" {% if cap.color == '#0095e5' %} selected="selected" {%endif %}>Celeste</option>
+                    <option value="#00b65e" data-color="#00b65e" {% if cap.color == "#00b65e" %} selected="selected" {%endif %}>Verde</option>
+                    <option value="#f69c18" data-color="#f69c18" {% if cap.color == "#f69c18" %} selected="selected" {%endif %}>Naranja</option>
+                    <option value="#fbc719" data-color="#fbc719" {% if cap.color == "#fbc719" %} selected="selected" {%endif %}>Orange</option>
+                    <option value="#f54a26" data-color="#f54a26" {% if cap.color == "#f54a26" %} selected="selected" {%endif %}>Rojo</option>
+                    <option value="#cf4594" data-color="#cf4594" {% if cap.color == "#cf4594" %} selected="selected" {%endif %}>Rosa</option>
+                    <option value="#8955ba" data-color="#8955ba" {% if cap.color == "#8955ba" %} selected="selected" {%endif %}>Lila</option>
+                    <option value="#635bc8" data-color="#635bc8" {% if cap.color == "#635bc8" %} selected="selected" {%endif %}>Violeta</option>
+                    <option value="#143d6b" data-color="#143d6b" {% if cap.color == "#143d6b" %} selected="selected" {%endif %}>Azul</option>
+                    <option value="#ccd622" data-color="#ccd622" {% if cap.color == "#ccd622" %} selected="selected" {%endif %}>Lima</option>
+                </select>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-info-circle"></i> Detalles</h6>
+            </div>
+            <div class="col text-secondary text-left">
+                {{ post.detalles | as_crispy_field }}
+            </div>
+        </div>
+        <!-- Botones -->
+
+        <div class="row text-right">
+            <div class="col-lg-12 text-right">
+            <div class="d-flex justify-content-end">
+                <button name="editar_tarea" type="submit" class="btn btn-primary text-right">Actualizar</button>
+            </div>
+        </div>
+        </div>
+        <!-- FIN Botones --------->
+
+    </div>
+</form>
+
+<script>
+    $(function () {
+
+        window.prettyPrint && prettyPrint();
+
+        $('#id_color_editar').colorselector();
+
+    });
+</script>

@@ -1,0 +1,124 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %}
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.0/js/dataTables.bootstrap4.js"></script>
+<link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.css" />
+
+<!-- select2 -->
+<link rel="stylesheet" href="{% static '/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.css" />
+{% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %}Comunicaciones{%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+<div class="container">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="fas fa-calendar-alt"></i>&nbsp; Enviar comunicación
+                    </h5>
+
+                    <div class="card-tools">
+                        <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                            <li>
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form action="#" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="row">
+
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-8">
+                            <div class="row">
+                                
+                                <div class="col-sm-auto">
+                                    <h6 class="mt-2 text-left"><i class="fas fa-user"></i> Nombres *</h6>
+                                </div>
+                                
+                                <div class="col text-secondary text-left">
+                                    <div class="form-group">
+                                        <select class="select_nombre form-control" data-placeholder="" id="nombre"
+                                            name="nombre" style="width: 100%;" multiple="multiple">
+                                            {% for n in nombres %}
+                                            <option style='color:#333 !important' value="{{n.id}}">{{n.nombres}} {{n.apellidos}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-auto">
+                                    <h6 class="mt-2 text-left"><i class="fas fa-info-circle"></i> Mensaje
+                                    </h6>
+                                </div>
+                                <div class="col text-secondary text-left">
+                                    <div id="div_id_msg" class="form-group">
+                                        <div class="">
+                                            <textarea name="msg" cols="40" rows="3" maxlength="500"
+                                                class="textarea form-control" id="msg"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-auto">
+                                    <h6 class="mt-2 text-left"><i class="fas fa-file"></i> Agregar archivo</h6>
+                                </div>
+                                <div class="col text-secondary text-left">
+                                    <div class="form-group">
+                                        <div class="">
+                                            <input type="file" name="file" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Botones -->
+
+                            <div class="d-flex justify-content-center">
+                                <div class="row mt-4">
+                                    <input type="submit" value="Enviar" class="btn btn-primary" />
+                                    &nbsp;&nbsp;&nbsp;
+                                    <input type="reset" value="Borrar" class="btn btn-secondary" />
+                                </div>
+                            </div>
+                            <!-- FIN Botones --------->
+                        </div>
+                        <div class="col-sm-2"></div>
+                    </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+{% endblock content%}
+{% block customJS %}
+<script src="{% static '/plugins/select2-bootstrap4-theme/select2.full.min.js' %}"></script>
+<script>
+    $(document).ready(function() {
+    $('.select_nombre').select2();
+});
+</script>
+{% endblock customJS %}

@@ -1,0 +1,218 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.css" />
+<!--jquery Datatable  -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<!--jquery Datatable buttons -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.print.min.js"></script>
+
+{% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %}  Módulo Mantenimiento / Updates {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+<div class="container">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <i class="fas fa-search-location"></i>&nbsp; Busqueda Avanzada
+                </h5>
+                <div class="card-tools">
+                    <!-- Buttons, labels, and many other things can be placed here! -->
+                    <!-- Here is a label for example -->
+                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+                <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="col-12">
+                    <div class="w-100">
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <select name="pedido" class="form-control">
+                                                <option value="" disabled selected>Tipo Pedido</option>                                                
+                                                {% for t,y in tipo %}
+                                                <option>{{t}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <select name="relevado" class="form-control">
+                                                <option value="" disabled selected>Tipo Relevado</option>                                                
+                                                {% for t,y in tipo %}
+                                                <option>{{t}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <select name="estado" class="form-control">
+                                                <option value="" disabled selected>Estado Update</option>
+                                                {% for t,y in estado_dev %}
+                                                <option>{{t}}</option>
+                                                {% endfor %}
+                                                <option>SOLICITADO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <button class="btn btn-primary" name="busqueda"
+                                            type="submit">Buscar</button>
+                                        <a href="{% url 'listar_updates' %}"><button class="btn btn-secondary" 
+                                            type="button">Reiniciar</button></a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card table-responsive">
+            <div class="card-header mb-0">
+                <h5 class="card-title ">
+                    <span class="align-middle"><i class="fas fa-search"></i>&nbsp; Resultado de la busqueda</span>
+                </h5>
+                <div class="card-tools mb-0">
+                    <!-- Here is a label for example -->
+                    <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+                <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="listado" class="table dataTable compact hover order-column row-border" style="width: 100%"
+                data-page-length='25'>
+                <thead class="thead-dark">
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th>Fecha</th>
+                        <th>Tipo Pedido</th>
+                        <th>Título</th>
+                        <th>Tipo Relevado</th>
+                        <th>Tiempo Estimado</th>
+                        <th>Estado</th>
+                        <th>Ver</th>
+                    </tr>
+                </thead>
+                <tbody  >
+                    {% for t in u %}
+                    <tr class="text-center">
+                        <td>{{t.id}}</td>
+                        <td>{{t.fecha_creacion | date:"d/m/y" }}</td>
+                        <td>{{t.tipo_pedido |title }}</td>
+                        <td class="text-left">{{t.titulo|title }}</td>
+                        <td>{{t.tipo_relevado|default_if_none:"sin confirmar"  }}</td>
+                        <td>{{t.tiempo_estimado | default_if_none:"sin confirmar" }} días</td>
+                        <td>{{t.estado | default_if_none:"sin confirmar" }}</td>
+                        <td>
+                            <a href="{% url 'ver_update' t.id %}" class="text-secondary">
+                            <i class="fas fa-eye"></i></a>
+                        </td>
+                    </tr>                    
+                    {% endfor %}
+                </tbody>
+                <tfoot></tfoot>
+            </table>
+            <!-- /.card-body -->
+            <div class="card-footer"></div>
+            <!-- /.card-footer -->
+        </div>
+    </div>
+</div>
+{% endblock content%}
+{% block customJS %}
+<script>
+    
+
+$(document).ready(function () {
+    $("#listado").DataTable({
+        columnDefs: [
+            {
+                "targets": [],
+                "visible": false,
+                "searchable": false
+            }
+        ],            
+        dom: 'Bfrtip',
+        buttons: [ 
+                {
+            //Botón para Excel
+            extend: 'excel',
+            footer: true,
+            title: 'SIS - Inspecciones',
+            filename: 'SIS - Inspecciones',
+            text: '<button class="btn btn-success"><i class="fas fa-file-excel"></i></button>'
+            },
+            //Botón para PDF
+            {
+                extend: 'pdf',
+                footer: true,
+                title: 'SIS - Inspecciones',
+                filename: 'SIS - Inspecciones',
+                text: '<button class="btn btn-danger"><i class="fas fa-file-pdf"></i></button>',                     
+            },
+            //Botón para Imprimir
+            {
+                extend: 'print',
+                footer: true,
+                title: 'SIS - Inspecciones',
+                filename: 'SIS - Inspecciones',
+                text: '<button class="btn btn-primary"><i class="fas fa-print"></i></button>'
+            }
+        ],
+        responsive: true,
+        order: [[0, "asc"]],
+        language: {
+            lengthMenu: "Mostrar _MENU_ filas por página.",
+            zeroRecords: "No se encontraron registros.",
+            info: "Página _PAGE_ de _PAGES_",
+            infoEmpty: "No hay registros disponibles",
+            infoFiltered: "(filtrado por _MAX_ registros.)",
+            search: "Buscar:",
+            paginate: {
+                next: "Siguiente",
+                previous: "Anterior",
+            },
+        },
+    });
+
+});
+
+</script>
+{% endblock customJS %}

@@ -1,0 +1,90 @@
+{% load crispy_forms_tags %}
+<form action="#" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input id="identificador" name="identificador" type="hidden" value="{{identificador}}">
+    {{form.referencia.as_hidden}}
+    {{form.usuario.as_hidden}}
+    <div class="col-lg-12">
+
+        <div class="row">
+            <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-info-circle pr-1"></i></h6>
+            </div>
+            <div class="col text-secondary text-left m-1">
+                {{form.estado | as_crispy_field}}
+            </div>
+        </div>
+        <div class="row"  style="display: none;" id="finProceso">
+            <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-info-circle pr-1"></i></h6>
+            </div>
+            <div class="col text-secondary text-left m-1">
+                {{form.fecha_finalizacion | as_crispy_field}}
+            </div>
+        </div>
+        <div class="row"  style="display: none;" id="visita">
+            <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-info-circle pr-1"></i></h6>
+            </div>
+            <div class="col text-secondary text-left m-1">
+                {{form.fecha_visita | as_crispy_field}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-pen-alt pr-1"></i></h6>
+            </div>
+            <div class="col text-secondary text-left ">
+                {{form.motivo | as_crispy_field}}
+
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-sm-auto">
+                <h6 class="mt-2 text-left"><i class="fas fa-upload pr-1"></i></h6>
+            </div>
+            <div class="col text-secondary text-left ">
+                {{ form.archivos | as_crispy_field}}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <!-- Botones -->
+        <div class="row">
+            <div class="d-flex justify-content-center">
+                <button name="cambiar_estado" type="submit" class="btn btn-primary">Actualizar</button>
+            </div>
+        </div>
+        <!-- FIN Botones --------->
+</form>
+
+
+<script type="text/javascript">
+    $("#id_estado").change(function () {
+    if ($(this).val() == "FINALIZADA") {
+      $('#finProceso').show();
+      $('#id_finProceso').attr('required', '');
+      $('#id_finProceso').attr('data-error', 'Completa este campo.');
+    } 
+    else if ($(this).val() == "PROGRAMADA") {
+      $('#visita').show();
+      $('#id_visita').attr('required', '');
+      $('#id_visita').attr('data-error', 'Completa este campo.');
+    } 
+    else {
+      $('#finProceso').hide();
+      $('#id_finProceso').val('');
+      $('#id_finProceso').removeAttr('required');
+      $('#id_finProceso').removeAttr('data-error');
+      $('#visita').hide();
+      $('#id_visita').val('');
+      $('#id_visita').removeAttr('required');
+      $('#id_visita').removeAttr('data-error');
+    }
+  });
+
+
+</script>

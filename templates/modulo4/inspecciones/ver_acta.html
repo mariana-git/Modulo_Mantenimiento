@@ -1,0 +1,175 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %}
+
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %} {% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %} Acta de Inspección / {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+
+<div class="container">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="fas fa-stamp pr-2"></i>Acta de Inspección
+                    </h5>
+                    <div class="card-tools">
+                        <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                            <li>
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-column mt-3">
+                        <div class="row">
+                            <div class="col-md-10 m-auto">
+                                <div class="col-sm-auto align-items-center text-center">
+                                    <div class="card ">
+                                        <div class="container p-3">
+
+                                            <div class="row m-1 mb-5">
+                                                <div class="col-sm-auto m-auto ">
+                                                    <img src="/media/BA2016.png" alt="">
+                                                    <span class=" ml-3 mr-3 h3">ACTA DE INSPECCIÓN</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="row p-3 justify-content-end bg-gradient-light">
+                                                <div class="col-sm-auto pr-5">
+                                                    <div class="h4 text-left "><span class="text-secondary">ACTA Nº: </span> {{acta.numero}}</div>
+                                                </div>
+                                                <div class="col-sm-auto pr-5">
+                                                    <div class="h4 text-left "><span class="text-secondary"> FECHA: </span>{{acta.fecha_acta|date:'d/m/y'}}</div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row m-1">
+                                                
+                                                <div class="col-sm-auto">
+                                                    <i class="fas fa-search-location pr-2"></i>Datos del Acta
+                                                </div>
+                                            </div>
+                                            <hr class="hr2" />
+
+                                            <div class="row">
+                                                <div class="col-sm-auto">
+                                                    <h6 class=" text-left text-secondary">Sede</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-left">
+                                                    {{v.inspeccion.sede}}
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-sm-auto">
+                                                    <h6 class=" text-left text-secondary">Piso</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-left">
+                                                    {{v.inspeccion.piso| default_if_none:'sin datos'}}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-auto">
+                                                    <h6 class=" text-left text-secondary">Sector</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-left">
+                                                    {{v.inspeccion.sector| default_if_none:'sin datos'}}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-auto">
+                                                    <h6 class=" text-left text-secondary">Fecha de Solicitud</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-left">
+                                                    {{v.inspeccion.fecha_creado.date}}
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-auto">
+                                                    <h6 class=" text-left text-secondary">Visita Programada</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-left">
+                                                    {{v.fecha_visita.date}}
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-4">
+                                                <div class="col-sm-auto">
+                                                    <h6 class=" text-left text-secondary">Observaciones de la Solicitud</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-left">
+                                                    {{v.inspeccion.obs| default_if_none:'sin datos'}}
+                                                </div>
+                                            </div>
+
+                                            <hr class="hr2 mb-3" />
+                                            <div class="row m-1">
+                                                <div class="col-sm-auto">
+                                                    <i class="fas fa-stamp pr-2"></i>Resultado de la Inspección
+                                                </div>
+                                            </div>
+                                            <hr class="hr2" />
+                                            
+                                            <div class="row">
+                                                <div class="col-sm-auto">
+                                                    <h6 class=" text-left text-secondary">Observaciones de la Visita</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-left">
+                                                    {{ acta.obs| default_if_none:'sin datos'}}
+                                                </div>
+                                            </div>
+                                            <div class="row mt-1">
+                                                <div class="col-sm-auto">
+                                                    <h6 class=" text-left text-secondary">Usuario</h6>
+                                                </div>
+                                                <div class="col-sm-auto text-left mb-5">
+                                                    {{acta.usuario}}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Botones -->
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="{% url 'ver_inspeccion' acta.visita.inspeccion.id %}"
+                            class="btn btn-primary mt-3 mb-1">Volver</a>
+
+                    </div>
+                    <!-- FIN Botones --------->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content%}
+{% block customJS %}
+<script>
+    $(document).ready(function () {
+
+
+
+    });
+
+</script>
+
+{% endblock customJS %}

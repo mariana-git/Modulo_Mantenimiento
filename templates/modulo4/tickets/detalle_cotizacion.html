@@ -1,0 +1,300 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.0/js/dataTables.bootstrap4.js"></script>
+<link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.css" />
+<link href="{% static '/plugins/color-picker/bootstrap-colorselector.css' %}" rel="stylesheet" />
+<!--jquery confirm-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+{% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %} Cotizaciones / Detalles {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+<div class="container">
+    <div class="card table-responsive">
+        <div class="card-header">
+            <h5 class="card-title">
+                <i class="fas fa-chart-line pr-2"></i>Cotización
+            </h5>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+            <!-- /.card-tools -->
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body p-2">
+            <div class="container">
+                <div class="row d-flex justify-content-center mt-3">
+                    <div class="col-lg-6 flex-column">
+                        <div class="card collapsed-card">
+                            <div class="card-header">
+                                <h5 class="card-title ">
+                                    <i class="fas fa-info-circle pr-2 text-muted"></i>Detalles de la Cotización
+                                </h5>
+                                <div class="card-tools">
+                                    <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                                        <li>
+                                            
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </li>
+    
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body bg-white">
+                                <div class="row text-left">
+                                    <div class="flex-column d-flex">
+                                        <ul class="list-unstyled p-2">
+                                            <li>
+                                                <h5>Estado actual: <span
+                                                        class=" badge p-2 bg-estado-cotiz m-1">{{cotizacion.estado_actual}}</span>
+                                                </h5>
+                                            </li>
+                                            <li><small class="text-muted mr-2">Proveedor:
+                                                </small>{{cotizacion.proveedor | upper}}</li>
+                                            <li><small class="text-muted mr-2">Fecha de Solicitud:
+                                                </small>{{cotizacion.fecha_solicitud |date:'d/m/y'}}</li>
+                                            <li><small class="text-muted mr-2">Observaciones: </small>
+                                                <span>{{cotizacion.obs}}</span></li>
+                                            <li><small class="text-muted mr-2">Orden de Trabajo: </small>
+                                                <span class="pl-2"> # {{cotizacion.ot.id}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>                                
+                                </div>
+                            </div>                           
+                        </div>
+                    </div>
+                    <div class="col-lg-6 flex-column">
+                        <div class="row">
+                            <div class="col-sm">
+                                <div class="card collapsed-card">
+                                    <div class="card-header">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-copy pr-2 text-muted"></i>Archivos de la Cotización
+                                        </h5>
+                                        <div class="card-tools">
+                                            <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                                                <li>
+                                                    
+                                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </li>
+                                                
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-body bg-white">
+                                        <div class="row ">
+                                            {% if ct_adjuntos %}
+                                                
+                                            <div class="table-responsive">
+                                                <table class="table table-sm text-left">
+                                                    <tbody>
+
+                                                        {% for a in ct_adjuntos %}
+                                                        <tr class="h5">
+                                                            {%if 'image' in a.tipo %}
+                                                            <th scope="row"><small><i class="fas fa-file-image text-muted pr-1 text-pink"  title="{{a.nombre}}"></i>{{a.nombre|truncatechars:15}}</small></th>
+                                                            <td><a href="{% url 'ver_imagenes' a.id a.referencia %}" class="btn btn-tool ml-2"  ><i class="fas fa-eye text-muted" title="Ver imagen" ></i></a></td>
+                                                            {%else%}
+                                                            <th scope="row"><small ><i class="fas fa-file-alt  pr-1 text-muted" title="{{a.nombre}}"></i>{{a.nombre|truncatechars:15}}</small></th>
+                                                            <td><a href="{{a.archivo.url}}" class="btn btn-tool ml-2" target = "_blank"><i class="fas fa-eye text-muted" title="Ver Archivo" ></i></a></td>
+                                                            {%endif%}
+                                                            <td><a href="{{a.archivo.url}}" download class="btn btn-tool ml-2"><i class="fas fa-download" title="Descargar Archivo"></i></a></td>                                                                    
+                                                            <td><i class="fas fa-trash btn btn-tool ml-2" title="Eliminar Archivo" data-toggle="modal" data-target="#modalBorrar"
+                                                                data-id="{{a.id}}" data-objeto="archivo_{{a.referencia}}"></i></td>                                                                               
+                                                        </tr>                                            
+                                                        {%endfor%}   
+
+                                                    </tbody>
+                                                </table>
+                                            </div>                                                    
+                                            {% else %}
+                                            <div class="row">
+                                                <p class="text-muted pl-2">Sin archivos adjuntos.</p>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-end d-flex">
+                    <a class="btn btn-secondary m-2" href="{% url 'ticket' ticket %}">Volver al ticket</a>
+                    <button class="btn btn-primary m-2"
+                        onclick="cambiar_estado('{{cotizacion.id}}','COTIZACIÓN')">Actualizar estado</button>
+                </div>
+                    <div class="card table-responsive p-2 mt-3">
+                        <!-- <div class="info-box"> -->
+                        <table class="table table-sm ">
+                            <thead>
+                                <tr class="d-flex bg-light">
+                                    <th class="col-12 pl-1 text-secondary">Cambios de estado </th>
+                                </tr>
+                                <tr class="d-flex text-secondary">
+                                    <th scope="col" class="col-2 pl-0 ">
+                                        <small>Fecha</small>
+                                    </th>
+                                    <th scope="col" class="col-2 pl-0 ">
+                                        <small>Usuario</small>
+                                    </th>
+                                    <th scope="col" class="col-2 pl-0 ">
+                                        <small>Nuevo Estado</small>
+                                    </th>
+                                    <th scope="col" class="col-5 pl-0 ">
+                                        <small>Motivo</small>
+                                    </th>
+                                    <th scope="col" class="col-1 pl-0 ">
+                                        <small></small>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for e in cotizacion_estados %}
+                                <tr class="d-flex">
+                                    <td class="col-2 pl-0">
+                                        <h6>{{e.fecha |date:'d/m/y'}}</h6>
+                                    </td>
+                                    <td class="col-2 pl-0">
+                                        <h6>{{e.usuario|title }}</h6>
+                                    </td>
+                                    <td class="col-2 pl-0">
+                                        <h6>{{e.estado}}</h6>
+                                    </td>
+                                    <td class="col-5">
+                                        <h6 class="p-0 m-0">{{e.motivo| capfirst }} </h6>
+                                    </td>
+                                    <td class="col-1">
+                                        <a href="#" data-toggle="modal" data-target="#modalBorrar" data-id="{{e.id}}"
+                                            data-objeto="borrar_estado_cotiz"><i class="fas fa-trash-alt text-secondary"
+                                                title="Borrar estado"></i></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- FIN DATOS -->
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer"></div>
+            <!-- /.card-footer -->
+        </div>
+    </div>
+</div>
+
+<!--#region ------------------------------MODALES------------------------------------------------------------  -->
+
+   
+
+    <!--#region MODAL BORRAR -->
+    <div class="modal fade" id="modalBorrar" tabindex="-1" role="dialog" aria-labelledby="BorrarModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient-danger">
+                    <h5 class="modal-title">Esta seguro que quiere borrar?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <form action="#" method="POST">
+                        {% csrf_token %}
+                        <input id="id_objeto_borrar" name="id_objeto_borrar" type="hidden" value="">
+                        <input id="objeto_borrar" name="objeto_borrar" type="hidden" value="">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        &nbsp;&nbsp;&nbsp;
+                        <button type="submit" name="borrado" class="btn btn-danger">Borrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--#endregion Fin modal Borrar Ticket -->
+
+<!--#endregion MODALES -->
+    {% endblock content%}
+    {% block customJS %}
+    <script src="{% static '/plugins/color-picker/bootstrap-colorselector.js' %}"></script>
+
+
+    <script>
+        $(document).ready(function () {
+
+            $(function () {
+                $('[data-toggle="popover"]').popover()
+            })
+
+            $('.popover-dismiss').popover({
+                trigger: 'focus'
+            })
+
+            //cambio color del badge del estado del ticket    
+            $('.bg-estado-cotiz').addClass(function () {
+                let estado = '{{cotizacion.estado_actual}}';
+
+                if (estado == 'EN REVISION') {
+                    $(this).addClass('bg-gradient-yellow');
+                } else if (estado == 'ACEPTADA') {
+                    $(this).addClass('bg-gradient-green');
+                } else if (estado == 'RECHAZADA') {
+                    $(this).addClass('bg-gradient-danger');
+                } else {
+                    $(this).addClass('bg-gradient-teal');
+                }
+
+            });
+
+
+
+
+            $('#modalBorrar').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget)
+                var id = button.data('id')
+                var obj = button.data('objeto')
+                var modal = $(this)
+
+                modal.find('#id_objeto_borrar').attr("value", id)
+                modal.find('#objeto_borrar').attr("value", obj)
+            });
+
+
+
+
+        });
+
+    </script>
+
+    <script>
+        function cambiar_estado(id, origen) {
+            $.confirm({
+                title: 'Actualizar estado',
+                content: 'url:/modulo4/cambiar-estado/' + id + '/' + origen + '/',
+                theme: 'bootstrap',
+                type: 'blue',
+                buttons: false,
+            });
+        };
+
+
+    </script>
+    {% endblock customJS %}

@@ -1,0 +1,102 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %}
+{% load crispy_forms_tags %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %}
+<noscript>
+  <!-- anchor linking to external file -->
+  <a href="https://www.mozilla.org/">External Link</a>
+</noscript>
+{% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %} {{seleccionada.referencia| lower|capfirst}} / Visor de Imágenes {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="d-flex justify-content-center">
+          {% if seleccionada.referencia == 'COTIZACIÓN'%}
+          <a href="{% url 'detalle_cotizacion' seleccionada.identificador %}" class="btn btn-primary mt-3 mb-1">Volver</a>
+          {% elif seleccionada.referencia == 'PROVEEDOR'%}
+          <a href="{% url 'ver_proveedor' seleccionada.identificador %}" class="btn btn-primary mt-3 mb-1">Volver</a>
+          {% elif seleccionada.referencia == 'VISITA' or seleccionada.referencia == 'INSPECCIÓN'%}
+          <a href="{% url 'ver_inspeccion' obj %}" class="btn btn-primary mt-3 mb-1">Volver</a>
+          {% elif seleccionada.referencia == 'TICKET' or seleccionada.referencia == 'OT'%}
+          <a href="{% url 'ticket' obj %}" class="btn btn-primary mt-3 mb-1">Volver</a>
+          {% elif seleccionada.referencia == 'UP-DEVOLUCIÓN' or seleccionada.referencia == 'UP-PEDIDO'%}
+          <a href="{% url 'ver_update' obj %}" class="btn btn-primary mt-3 mb-1">Volver</a>
+          {% endif%}
+        </div>
+
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+          <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="{{seleccionada.id}}" class="active"></li>
+            {% for i in imagenes %}
+            <li data-target="#carouselExampleIndicators" data-slide-to="{{i.id}}"></li>
+            <!-- <li data-target="#carouselExampleIndicators" data-slide-to="2"></li> -->
+            {% endfor %}
+          </ol>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="row pl-3">
+                <ul class="list-unstyled align-items-center">
+                    <li><span class='h6'>Imagen: <b>{{seleccionada.nombre}}</b></span></li>
+                    <li><span class='h6'>Subida por: <b>{{seleccionada.usuario}}</b></span></li>
+                    <li><span class='h6'>Fecha de subida: <b>{{seleccionada.fecha}}</b></span></li>
+                    <li><span class='h6'>{{seleccionada.referencia}} Nº: <b>{{seleccionada.identificador}}</b></span></li>
+                </ul>
+            </div>
+              <img class="d-block w-100 rounded img-thumbnail" src="{{seleccionada.archivo.url}}" alt="{{seleccionada.nombre}}" >
+            </div>
+            {% for i in imagenes %}
+            
+            <div class="carousel-item justify-content-center">
+              <div class="row pl-3">
+                <ul class="list-unstyled align-items-center">
+                  <li><span class='h6'>Imagen: <b>{{i.nombre}}</b></span></li>
+                  <li><span class='h6'>Subida por: <b>{{i.usuario}}</b></span></li>
+                  <li><span class='h6'>Fecha de subida: <b>{{i.fecha}}</b></span></li>
+                  <li><span class='h6'>{{i.referencia}} Nº: <b>{{i.identificador}}</b></span></li>
+                </ul>
+            </div>
+              <img class="d-block w-100 rounded img-thumbnail" src="{{i.archivo.url}}" alt="{{i.nombre}}">
+            </div>
+            {% endfor %}
+          </div>
+
+          <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content%}
+{% block customJS %}
+
+<script>
+  $(document).ready(function () {
+
+    $('.carousel').carousel()
+
+  });
+
+</script>
+
+{% endblock customJS %}

@@ -1,0 +1,572 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %}
+{% load crispy_forms_tags %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %}
+<!-- fullCalendar -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.min.js'></script>
+<link href="{% static '/plugins/color-picker/bootstrap-colorselector.css' %}" rel="stylesheet" />
+<!--jquery confirm-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    
+{% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %} Calendario {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- /.col -->
+            <div class="col-md-9">
+                <div class="card card-primary">
+                    <div class="card-body p-0">
+                        <!-- THE CALENDAR -->
+                        <div id="calendario_M4">
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <div class="col-md-3">
+                <div class="sticky-top mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <i class="fas fa-check-circle"></i>&nbsp;Calendarios Visibles
+                            </h5>
+                        </div>
+                        <div class="list-group">
+                           <a href="#" class="list-group-item list-group-item-action bg-gradient-purple"><i
+                                    class="fas fa-smile"></i> Capacitaciones&nbsp;&nbsp;&nbsp;<input class="cs" value="1" type="checkbox" checked></a>
+
+                             <!-- <a href="#" class="list-group-item list-group-item-action bg-gradient-cyan"><i
+                                    class="fas fa-birthday-cake"></i> Cumpleaños&nbsp;&nbsp;&nbsp;<input class="cs" value="2" type="checkbox" checked></a>
+                            
+                                    <a href="#" class="list-group-item list-group-item-action bg-gradient-pink"><i
+                                        class="fas fa-scroll"></i> Lic. Ordinarias&nbsp;&nbsp;&nbsp;<input class="cs" value="3" type="checkbox" checked></a> -->
+
+                                    <a href="#" class="list-group-item list-group-item-action bg-light"><i
+                                    class="fas fa-sticky-note"></i> Recordatorios&nbsp;&nbsp;&nbsp;<input class="cs" value="4" type="checkbox" checked></a>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <i class="fas fa-sticky-note"></i> Recordatorios
+                            </h5>
+                        </div>
+                        <div class="list-group">
+                            <a href="#" data-toggle="modal" data-target="#modalPostitCrear"
+                                class="list-group-item list-group-item-action bg-light"><i
+                                    class="fas fa-sticky-note"></i> Crear Recordatorio</a>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+</section>
+
+<!-- Modal Crear Post-it -->
+<div class="modal fade" id="modalPostitCrear" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-dark">
+                <h4 class="modal-title modal-dialog-centered" id="exampleModalLabel"><i
+                        class="fas fa-sticky-note"></i>&nbsp;&nbsp; Crear recordatorio</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'calendario_M4' %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <h6 class="mt-2 text-left">Titulo *</h6>
+                            </div>
+                            <div class="col text-secondary text-left">
+                                {{ post.titulo | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <h6 class="mt-2 text-left"><i class="fas fa-calendar-alt"></i> Fecha *</h6>
+                            </div>
+                            <div class="col-sm-auto text-secondary text-left">
+                                {{ post.fecha | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <h6 class="mt-2 text-left"><i class="fas fa-clock"></i> Hora</h6>
+                            </div>
+                            <div class="col-sm-auto text-secondary text-left">
+                                {{ post.hora | as_crispy_field }}
+                            </div>
+                            <div class="col-sm-auto text-secondary text-left">
+                                {{ post.minutos | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <h6 class="mt-2 text-left"><i class="fas fa-info-circle"></i> Color</h6>
+                            </div>
+                            <div class="col text-secondary text-left">
+                                    <!--<input type="color" class="form-control form-control-color" id="id_color" name="color"
+                                    value="#563d7c" title="">-->
+
+                                    <select id="id_color" name="color">
+                                        <option value="#0095e5" data-color="#0095e5">Celeste</option>
+                                        <option value="#00b65e" data-color="#00b65e" selected="selected">Verde</option>
+                                        <option value="#f69c18" data-color="#f69c18">Naranja</option>
+                                        <option value="#fbc719" data-color="#fbc719">Orange</option>
+                                        <option value="#f54a26" data-color="#f54a26">Rojo</option>
+                                        <option value="#cf4594" data-color="#cf4594">Rosa</option>
+                                        <option value="#8955ba" data-color="#8955ba">Lila</option>
+                                        <option value="#635bc8" data-color="#635bc8">Violeta</option>
+                                        <option value="#143d6b" data-color="#143d6b">Azul</option>
+                                        <option value="#ccd622" data-color="#ccd622">Lima</option>
+                                      </select>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <h6 class="mt-2 text-left"><i class="fas fa-info-circle"></i> Detalles</h6>
+                            </div>
+                            <div class="col text-secondary text-left">
+                                {{ post.detalles | as_crispy_field }}
+                            </div>
+                        </div>
+
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+
+                <!-- Botones -->
+                <div class="row">
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        &nbsp;&nbsp;&nbsp;
+                        <button name="recordatorio_crear" type="submit" class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+                <!-- FIN Botones --------->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Post-it -->
+<div class="modal fade" id="modalEditPostit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-dark">
+                <h4 class="modal-title modal-dialog-centered" id="exampleModalLabel"><i
+                        class="fas fa-sticky-note"></i>&nbsp;&nbsp; Editar recordatorio</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'calendario_M4' %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <h6 class="mt-2 text-left">Titulo *</h6>
+                            </div>
+                            <div class="col text-secondary text-left">
+                                {{ post.titulo | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <h6 class="mt-2 text-left"><i class="fas fa-calendar-alt"></i> Fecha *</h6>
+                            </div>
+                            <div class="col-sm-auto text-secondary text-left">
+                                {{ post.fecha | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <h6 class="mt-2 text-left"><i class="fas fa-clock"></i> Hora</h6>
+                            </div>
+                            <div class="col-sm-auto text-secondary text-left">
+                                {{ post.hora | as_crispy_field }}
+                            </div>
+                            <div class="col-sm-auto text-secondary text-left">
+                                {{ post.minutos | as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <h6 class="mt-2 text-left"><i class="fas fa-info-circle"></i> Color</h6>
+                            </div>
+                            <div class="col text-secondary text-left">
+                                    <!--<input type="color" class="form-control form-control-color" id="id_color" name="color"
+                                    value="#563d7c" title="">-->
+
+                                    <select id="id_color_edit" name="color">
+                                        <option value="#0095e5" data-color="#0095e5">Celeste</option>
+                                        <option value="#00b65e" data-color="#00b65e" selected="selected">Verde</option>
+                                        <option value="#f69c18" data-color="#f69c18">Naranja</option>
+                                        <option value="#fbc719" data-color="#fbc719">Orange</option>
+                                        <option value="#f54a26" data-color="#f54a26">Rojo</option>
+                                        <option value="#cf4594" data-color="#cf4594">Rosa</option>
+                                        <option value="#8955ba" data-color="#8955ba">Lila</option>
+                                        <option value="#635bc8" data-color="#635bc8">Violeta</option>
+                                        <option value="#143d6b" data-color="#143d6b">Azul</option>
+                                        <option value="#ccd622" data-color="#ccd622">Lima</option>
+                                      </select>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <h6 class="mt-2 text-left"><i class="fas fa-info-circle"></i> Detalles</h6>
+                            </div>
+                            <div class="col text-secondary text-left">
+                                {{ post.detalles | as_crispy_field }}
+                            </div>
+                        </div>
+
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+
+                <!-- Botones -->
+                <div class="row">
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        &nbsp;&nbsp;&nbsp;
+                        <button name="recordatorio_actualizar" type="submit" class="btn btn-primary">Actualizar</button>
+                    </div>
+                </div>
+                <!-- FIN Botones --------->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Capacitaciones -->
+<div class="modal fade" id="modalCapacitaciones" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-purple">
+                <h4 class="modal-title modal-dialog-centered"><i class="fas fa-smile"></i>&nbsp;&nbsp;
+                    Capacitaciones</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-auto">
+                    <div class="row">
+                        <div class="col-sm-auto">
+                            <h6 class="mt-2 text-left">Nombre</h6>
+                        </div>
+                        <div class="col text-secondary text-left">
+                            <h4 class="mt-2" id="modal_titulo"></h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-auto">
+                            <h6 class="mt-2 text-left"><i class="fas fa-globe"></i> Lugar</h6>
+                        </div>
+                        <div class="col-sm-auto text-secondary text-left">
+                            <h4 class="mt-2" id="modal_lugar"></h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-auto">
+                                    <h6 class="mt-2 text-left"><i class="fas fa-calendar-alt"></i> Fecha</h6>
+                                </div>
+                                <div class="col-sm-auto text-secondary text-left">
+                                    <h4 class="mt-2" id="modal_fecha"></h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-auto">
+                                    <h6 class="mt-2 text-left"><i class="fas fa-clock"></i> Hora</h6>
+                                </div>
+                                <div class="col-sm-auto text-secondary text-left">
+                                    <h4 class="mt-2" id="modal_hora"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <!-- Botones -->
+                <div class="row">
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        &nbsp;&nbsp;&nbsp;
+                        <a href="#" class="btn btn-primary" role="button" aria-pressed="true" id="modal_url">Ver
+                            Detalles</a>
+                        <!--<button id="modal_url" type="submit" class="btn btn-primary">Ver Detalles</button>-->
+                    </div>
+                </div>
+                <!-- FIN Botones --------->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Post-it -->
+
+<div class="modal fade" id="modalPostitVer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="post_color">
+                <h4 class="modal-title modal-dialog-centered text-white"><i
+                        class="fas fa-sticky-note "></i>&nbsp;&nbsp; Recordatorio</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <h6 class="mt-2 text-left">Titulo</h6>
+                            </div>
+                            <div class="col text-secondary text-left">
+                                <h4 class="mt-2" id="post_titulo"></h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mt-2 text-left"><i class="fas fa-calendar-alt"></i> Fecha</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        <h4 class="mt-2" id="post_fecha"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mt-2 text-left"><i class="fas fa-clock"></i> Hora</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        <h4 class="mt-2" id="post_hora"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-auto">
+                                <h6 class="mt-2 text-left"><i class="fas fa-info-circle"></i> Detalles</h6>
+                            </div>
+                            <div class="col text-secondary text-left">
+                                <h4 class="mt-2" id="post_detalles"></h4>
+                            </div>
+                        </div>
+
+                    </div>
+            </div>
+            <div class="modal-footer">
+
+                <!-- Botones -->
+                <form action="{% url 'calendario_M4' %}" method="POST">
+                    {% csrf_token %}
+                <div class="row">
+                    <div class="d-flex justify-content-center">
+                        <input type='hidden' id='post_id' name='post_id'>
+                        <button name="recordatorio_borrar" type="submit" class="btn btn-danger">Borrar</button>
+                        &nbsp;&nbsp;&nbsp;
+                        <button  id="post_btn_edit" name="recordatorio" type="button" class="btn btn-primary" data-dismiss="modal">Editar</button>
+                        <!--<a href="#" class="btn btn-primary" data-dismiss="modal" data-toggle="modalBorrar" data-target="#modalBorrar">Editar</a>-->
+                        &nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </form>
+                <!-- FIN Botones --------->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content%} {% block customJS %}
+<!-- fullCalendar-->
+<script src="{% static '/plugins/fullcalendar/locales-all.js' %}"></script>
+<script src="{% static '/plugins/color-picker/bootstrap-colorselector.js' %}"></script>
+
+<script>
+    var date = new Date()
+    var d = date.getDate(),
+        m = date.getMonth(),
+        y = date.getFullYear()
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendario_M4');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+                left: 'prev,next,today',
+                center: 'title',
+                right: 'timeGridDay,timeGridWeek,dayGridMonth,listWeek'
+            },
+            initialView: 'dayGridMonth',
+            scrollTime: '07:00:00',
+            navLinks: 'True',
+            themeSystem: 'Flatly',
+            handleWindowResize: 'True',
+            locale: 'es',
+            nowIndicator: 'True',
+            eventClick: function (info) {
+
+                info.jsEvent.preventDefault();
+                
+                if (info.event.extendedProps.tipo == 'capacitacion') {
+                    $('#modal_titulo').html(info.event.title);
+                    $('#modal_lugar').html(info.event.extendedProps.lugar);
+                    $('#modal_fecha').html(info.event.start.getDate() + '/' + info.event.start.getMonth() + '/' + info.event.start.getFullYear());
+                    minutos = ('0'+ info.event.start.getMinutes()).slice(-2)
+                    $('#modal_hora').html(info.event.start.getHours() + ':' + minutos);
+                    $('#modal_detalles').html(info.event.extendedProps.description);
+                    $('#modal_url').attr('href', info.event.url);
+                    $('#modalCapacitaciones').modal();
+                } else if (info.event.extendedProps.tipo == 'postit'){
+                    $('#post_titulo').html(info.event.title);
+                    $('#post_id').attr("value", info.event.extendedProps.id);
+                    $('#post_fecha').html(info.event.start.getDate() + '/' + info.event.start.getMonth() + '/' + info.event.start.getFullYear());
+                    minutos = ('0'+ info.event.start.getMinutes()).slice(-2)
+                    $('#post_hora').html(info.event.start.getHours() + ':' + minutos);
+                    $('#post_detalles').html(info.event.extendedProps.detalles);
+                    $('#post_color').attr("style", "background-color:" + info.event.extendedProps.color);
+                    $('#post_btn_edit').attr("onclick", "actualizar_recordatorio(" + info.event.extendedProps.id + ")")
+                    $('#modalPostitVer').modal();
+                }
+            },
+
+            eventDidMount: function (arg) {
+              var cs = document.querySelectorAll(".cs");
+              cs.forEach(function (v) {
+                if (v.checked) {
+                  if (arg.event.extendedProps.cid === v.value) {
+                    arg.el.style.display = "auto";
+                  }
+                } else {
+                  if (arg.event.extendedProps.cid === v.value) {
+                    arg.el.style.display = "none";
+                  }
+                }
+              });
+              if (arg.event.extendedProps.background) {
+                  arg.el.style.background = arg.event.extendedProps.background;
+                }
+
+
+            },
+
+
+            events: function (fetchInfo, successCallback, failureCallback) {
+                successCallback([
+                {% for c in cap %}
+                {
+                    title: '{{c.nombre}}',
+                    start: new Date('{{c.fecha | date:"Y-m-d"}}T{{c.hora}}:{{c.minutos}}'),
+                    url: "{% url 'detalle_evento' c.id %}",
+                    extendedProps: {
+                        description: '{{c.observaciones}}',
+                        lugar: '{{c.lugar}}',
+                        tipo: 'capacitacion',
+                        cid: "1",
+                    },
+                    allDay: false,
+                    className: ['bg-gradient-purple text-white'],
+                    backgroundColor: '#FFFFFF',
+                    
+                    //borderColor: '#f39c12',
+                },
+                {% endfor %}
+                {%for r in record %}
+                {
+                    title: '{{r.titulo}}',
+                    start: new Date('{{r.fecha | date:"Y-m-d"}}T{{r.hora}}:{{r.minutos}}'),
+                    allDay: false,
+                    extendedProps: {
+                        id: '{{r.id}}',
+                        tipo: 'postit',
+                        detalles: '{{r.detalles |default_if_none:""}}',
+                        color: '{{r.color |default_if_none:"#563d7c"}}',
+                        cid: "4",
+                        background: '{{r.color |default_if_none:"#563d7c"}}',
+                    },
+                    className: ['text-white'],
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '{{r.color |default_if_none:"#563d7c"}}',
+                    
+                },
+                {% endfor %}                
+                ]);
+},
+                });
+                calendar.render();
+                var csx = document.querySelectorAll(".cs")
+                csx.forEach(function(el) {
+                    el.addEventListener('change', function() {
+                        calendar.refetchEvents();
+                        console.log(el);
+                })
+});
+                });
+</script>
+<script>
+    $(function() {
+
+      window.prettyPrint && prettyPrint();
+
+      $('#id_color').colorselector();
+
+    });
+      $(function() {
+
+        window.prettyPrint && prettyPrint();
+  
+        $('#id_color_edit').colorselector();
+  
+      });
+
+function actualizar_recordatorio(id) {
+    $.confirm({
+    title: 'Editar Recordatorio',
+    content: 'url:/modulo4/editar-recordatorio/'+ id + '/',
+    theme: 'bootstrap',
+    type: 'black',
+    buttons: false,
+});
+};
+</script>
+{% endblock customJS %}

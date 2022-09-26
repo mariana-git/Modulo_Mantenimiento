@@ -1,0 +1,134 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SIS - Sistema Integral de Sedes</title>
+  <!-- Favicon icon -->
+  <link rel="icon" type="image/png" href="{% static '/images/favico.png' %}" />
+
+<!-- CSS -->
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js" integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="{% static '/css/sis.css' %}" />
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static '/plugins/fontawesome-free/css/all.min.css' %}" />
+  <!-- CUSTOM CSS -->
+  <link rel="stylesheet" href="{% static '/css/custom.css' %}" />
+  <!-- SweetAlert2-->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.0/css/jquery.dataTables.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+  {% block custom_head%}{% endblock custom_head%}
+</head>
+
+<body class="hold-transition sidebar-mini layout-navbar-fixed">
+  <!-- Site wrapper -->
+  <div class="wrapper">
+    <!-- INICIO NAVBAR----------------->
+    {% include 'layouts/navbar.html' %}
+    <!-- FIN NAVBAR----------------->
+
+    <!-- INICIO MENU PRINCIPAL ------------>
+    {% include 'modulo4/layouts/menu_mod4.html' %}
+    <!-- FIN MENU PRINCIPAL ------------>
+
+    <!-- INICIO PARTE PRINCIPAL ----------------->
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h4>{% block titulo%}{% endblock %}</h4>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                  <!--<li class="breadcrumb-item"><a href="#"></a></li>
+                  <li class="breadcrumb-item"><a href="#"></a></li>-->
+                  <!--<li class="breadcrumb-item active">{% now "l d/m/Y" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>-->
+                </ol>
+              </div>
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <!-- Default box -->
+              {% block content %} {% endblock content %}
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- FIN PARTE PRINCIPAL ----------------->
+
+    <footer class="main-footer">
+      <div class="float-right d-none d-sm-block">
+        Version 0.2 - <strong>GOPA</strong>
+      </div>
+      Sistema Integral de Sedes
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+  <!--**********************************
+        Scripts
+    ***********************************-->
+
+  <!-- Bootstrap 4 -->
+  <script src="{% static '/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <!-- AdminLTE App -->
+  <script src="{% static '/plugins/js/adminlte.min.js' %}"></script>
+  <!-- AdminLTE for demo purposes -->
+  <!--<script src="{% static '/plugins/js/demo.js' %}"></script>-->
+ <!-- <script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.js"></script>-->
+
+  {% if messages %} {% for m in messages %}
+  <script language="JavaScript" type="text/javascript">
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "bottom-start",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
+    Toast.fire({
+      icon: "{{ m.tags }}",
+      title: "{{ m }}",
+    });
+  </script>
+  {% endfor %} {% endif %} {% block customJS %}{% endblock customJS%}
+</body>
+
+</html>

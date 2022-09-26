@@ -1,0 +1,218 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %}
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.0/js/dataTables.bootstrap4.js"></script>
+<link rel="stylesheet" type="text/css"
+  href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.css" />
+{% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %}Capacitaciones / Listar {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+<div class="container">
+
+<div class="row">
+<div class="col-lg-12">
+  <div class="card">
+    <div class="card-header">
+      <h5 class="card-title">
+        <i class="fas fa-calendar-alt"></i>&nbsp; Próximas Capacitaciones
+      </h5>
+
+      <div class="card-tools">
+        <ul class="list-unstyled mb-0 d-flex justify-content-center">
+          <li>
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+              <i class="fas fa-minus"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="d-flex flex-column">
+
+        <div class="card-deck justify-content-center">
+          <div class="row row-cols-1 row-cols-md-5 ">
+
+            {% for s in proximas %}
+            <div class="col-xl-auto mb-4">
+              <div class="card">
+                <div class="card-header bg-gradient-purple">
+                  <div class="row">
+                    <div class="col text-center align-items-center">
+                      <h2 class="mt-0 mb-0">{{s.fecha | date:"d"}} {{s.fecha | date:"M"}}</h2>
+                      <h4 class="mt-0 mb-0">{{s.hora}}:{{s.minutos}}</h4>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col text-center">
+                      <a href="{% url 'capacitacion' s.id %}" class="text-secondary">
+                        <h4 class="h4">{{ s.nombre }}</h4>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col text-left">
+                      <h6 class="card-text text-truncate">{{ s.calle }} {{s.altura}}</h6>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="row">
+                    <div class="col">
+                      <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                        <li>&nbsp;&nbsp;<a href="#" class="bg_primary" id="{{s.id | title}}"><i
+                              class="fas fa-info-circle"></i></a></li>
+                        <li>
+                          &nbsp;&nbsp;<a href="{% url 'capacitacion' s.id %}" class="icono_custom_primary"><i
+                              class="fas fa-eye"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+    <div class="card-header">
+      <h5 class="card-title">
+        <i class="fas fa-calendar-alt"></i>&nbsp; Capacitaciones Pasadas
+      </h5>
+
+      <div class="card-tools">
+        <ul class="list-unstyled mb-0 d-flex justify-content-center">
+          <li>
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+              <i class="fas fa-minus"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="d-flex flex-column">
+
+        <div class="card-deck justify-content-center">
+          <div class="row row-cols-1 row-cols-md-5">
+
+            {% for c in pasadas %}
+            <div class="col-xl-auto mb-4">
+              <div class="card">
+                <div class="card-header bg-gradient-purple">
+                  <div class="row">
+                    <div class="col text-center align-items-center">
+                      <h2 class="mt-0 mb-0">{{c.fecha | date:"d"}} {{c.fecha | date:"M"}}</h2>
+                      <h4 class="mt-0 mb-0">{{c.hora}}:{{c.minutos}}</h4>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col text-center">
+                      <a href="{% url 'capacitacion' c.id %}" class="text-secondary">
+                        <h4 class="h4">{{ c.nombre }}</h4>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col text-left">
+                      <h6 class="card-text text-truncate">{{ c.calle }} {{c.altura}}</h6>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="row">
+                    <div class="col">
+                      <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                        <li>
+                          &nbsp;&nbsp;<a href="{% url 'capacitacion' c.id %}" class="icono_custom_primary"><i
+                              class="fas fa-eye"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+{% endblock content%}
+{% block customJS %}
+{% for c in proximas %}
+<script>
+
+  $(document).on("click", "#{{c.id | title }}", function (e) {
+    Swal.fire({
+      showCloseButton: true,
+      showConfirmButton: false,
+      width: 'auto',
+      html: '<div class="row">' +
+        '  <div class="col align-items-center text-center">' +
+        '      <h3>{{c.nombre}}</h3>' +
+        '  </div>' +
+        '</div>' +
+        '<div class="row">' +
+        '    <div class="col-sm-auto">' +
+        '      <h6 class="mb-0 text-left">Lugar</h6>' +
+        '    </div>' +
+        '    <div class="col-sm-auto text-secondary text-left">' +
+        '      <h5 class="mb-0 text-left">{{c.lugar |default_if_none:""}}</h5>' +
+        '    </div>' +
+        '  </div>' +
+        '<div class="row">' +
+        '    <div class="col-sm-auto">' +
+        '      <h6 class="mb-0 text-left">Direccion</h6>' +
+        '    </div>' +
+        '    <div class="col-sm-auto text-secondary text-left">' +
+        '      <h5 class="mb-0 text-left">{{c.calle |default_if_none:""}} {{c.altura |default_if_none:""}}</h5>' +
+        '    </div>' +
+        '  </div>' +
+        '<div class="row">' +
+        '    <div class="col-sm-auto">' +
+        '      <h6 class="mb-0 text-left">Fecha</h6>' +
+        '    </div>' +
+        '    <div class="col-sm-auto text-secondary text-left">' +
+        '      <h5 class="mb-0 text-left">{{c.fecha | date:"d"}} {{c.fecha | date:"M"}}</h5>' +
+        '    </div>' +
+        '    <div class="col-sm-auto text-secondary text-left">' +
+        '      <h5 class="mb-0 text-left">{{c.hora |default_if_none:""}}:{{c.minutos |default_if_none:""}}</h5>' +
+        '    </div>' +
+        '  </div>'
+    });
+  });
+</script>
+{% endfor %}
+{% endblock customJS %}

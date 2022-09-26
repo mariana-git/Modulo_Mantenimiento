@@ -1,0 +1,233 @@
+{% load static %}
+<!-- INICIO MENU COSTADO ---------------->
+      <!-- Main Sidebar Container -->
+      <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <!-- Brand Logo -->
+        <a href="{% url 'mod4_index' %}" class="brand-link elevation-4">
+          <!--<img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">-->
+          <img src="{% static '/images/favico.png' %}" alt="AdminLTE Docs Logo Small" class="brand-image-xl logo-xs">
+          <span class="brand-text font-weight-light">Sistema Integral de Sedes</span>
+        </a>
+    
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="user-panel mt-2 d-flex justify-content-left text-muted">
+          </div>
+    
+          <!-- Sidebar Menu -->
+          {% with url_name=request.resolver_match.url_name %}
+          <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+              <!-- Add icons to the links using the .nav-icon class
+                   with font-awesome or any other icon font library -->
+                   <li class="nav-item">
+                    <a href="{% url 'mod4_index' %}" class="nav-link {% if url_name == 'mod4_index' %}active{% endif %}">
+                      <i class="nav-icon fas fa-chart-pie"></i>
+                      <p>
+                        Dashboard
+                        <!--<span class="badge badge-info right">2</span>-->
+                      </p>
+                    </a>
+                  </li>
+                  <li class="nav-item {% if url_name == 'detalle_sede' or url_name == 'agregar_sede' or url_name == 'listar_sede' or url_name == 'modificar_sede' %}menu-open{% endif %}">
+                    <a href="#" class="nav-link  {% if url_name == 'detalle_sede' or url_name == 'agregar_sede' or url_name == 'listar_sede' or url_name == 'modificar_sede' %}active{% endif %}">
+                      <i class="nav-icon fas fa-building"></i>
+                      <p>
+                        Info Sedes
+                        <i class="fas fa-angle-left right"></i>
+                        <!--<span class="badge badge-info right">6</span>-->
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a href="{% url 'listar_sede' %}" class="nav-link {% if url_name == 'listar_sede' %}active{% endif %}">
+                          <i class="fas fa-th-list nav-icon"></i>
+                          <p>Listar</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{% url 'agregar_sede' %}" class="nav-link {% if url_name == 'agregar_sede' %}active{% endif %}">
+                          <i class="fas fa-plus nav-icon"></i>
+                          <p>Agregar</p>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>                      
+
+                  <li class="nav-item {% if url_name == 'listar_proveedores' or url_name == 'agregar_proveedor' %}menu-open{% endif %}">
+                    <a href="#" class="nav-link  {% if url_name == 'listar_proveedores' or url_name == 'agregar_proveedor' %}active{% endif %}">
+                      <i class="nav-icon fas fa-address-card"></i>
+                      <p>
+                        Proveedores
+                        <i class="fas fa-angle-left right"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview ">
+                      <li class="nav-item">
+                        <a href="{% url 'listar_proveedores' %}" class="nav-link {% if url_name == 'listar_proveedores' %}active{% endif %}">
+                          <i class="fas fa-list nav-icon"></i>
+                          <p>Listar</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{% url 'agregar_proveedor' %}" class="nav-link {% if url_name == 'agregar_proveedor' %}active{% endif %}">
+                          <i class="fas fa-plus nav-icon"></i>
+                          <p>Agregar Proveedor</p>
+                        </a>
+                      </li>                      
+                    </ul>
+                  </li>
+
+                  <li class="nav-item {% if url_name == 'listar_tickets' or url_name == 'agregar_ticket' or url_name == 'buscar_ticket' or url_name == 'ticket' or url_name == 'modificar_ticket' %}menu-open{% endif %}">
+                    <a href="#" class="nav-link  {% if url_name == 'listar_tickets' or url_name == 'agregar_ticket' or url_name == 'buscar_ticket' or url_name == 'ticket' or url_name == 'modificar_ticket' %}active{% endif %}">
+                      <i class="nav-icon fas fa-ticket-alt"></i>
+                      <p>
+                        Tickets
+                        <i class="fas fa-angle-left right"></i>
+                        <!--<span class="badge badge-info right">6</span>-->
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview ">
+                      <li class="nav-item">
+                        <a href="{% url 'listar_tickets' %}" class="nav-link {% if url_name == 'listar_tickets' %}active{% endif %}">
+                          <i class="fas fa-list nav-icon"></i>
+                          <p>Listar</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{% url 'buscar_ticket' %}" class="nav-link {% if url_name == 'buscar_ticket' %}active{% endif %}">
+                          <i class="fas fa-search nav-icon"></i>
+                          <p>Buscar</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{% url 'agregar_ticket' %}" class="nav-link {% if url_name == 'agregar_ticket' %}active{% endif %}">
+                          <i class="fas fa-plus nav-icon"></i>
+                          <p>Agregar</p>
+                        </a>
+                      </li>                      
+                    </ul>
+                  </li>
+
+                  <li class="nav-item {% if url_name == 'listar_inspecciones' or url_name == 'buscar_inspeccion' or url_name == 'agregar_inspeccion' or url_name == 'inspeccion' or url_name == 'modificar_inspeccion' %}menu-open{% endif %}">
+                    <a href="#" class="nav-link  {% if url_name == 'listar_inspecciones' or url_name == 'buscar_inspeccion' or url_name == 'agregar_inspeccion' or url_name == 'inspeccion' or url_name == 'modificar_inspeccion' %}active{% endif %}">
+                      <i class="nav-icon fas fa-search-location"></i>
+                      <p>
+                        Inspecciones
+                        <i class="fas fa-angle-left right"></i>
+                        <!--<span class="badge badge-info right">6</span>-->
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview ">
+                      <li class="nav-item">
+                        <a href="{% url 'listar_inspecciones' %}" class="nav-link {% if url_name == 'listar_inspecciones' %}active{% endif %}">
+                          <i class="fas fa-list nav-icon"></i>
+                          <p>Listar</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{% url 'buscar_inspeccion' %}" class="nav-link {% if url_name == 'buscar_inspeccion' %}active{% endif %}">
+                          <i class="fas fa-search nav-icon"></i>
+                          <p>Buscar</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{% url 'agregar_inspeccion' %}" class="nav-link {% if url_name == 'agregar_inspeccion' %}active{% endif %}">
+                          <i class="fas fa-plus nav-icon"></i>
+                          <p>Agregar</p>
+                        </a>
+                      </li>                      
+                    </ul>
+                  </li>
+
+                  <li class="nav-item {% if url_name == 'listar_capacitaciones' or url_name == 'agregar_capacitacion' %}menu-open{% endif %}">
+                    <a href="#" class="nav-link  {% if url_name == 'listar_capacitaciones' or url_name == 'agregar_capacitacion' %}active{% endif %}">
+                      <i class="nav-icon fas fa-chalkboard-teacher"></i>
+                      <p>
+                        Capacitaciones
+                        <i class="fas fa-angle-left right"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview ">
+                      <li class="nav-item">
+                        <a href="{% url 'listar_capacitaciones' %}" class="nav-link {% if url_name == 'listar_capacitaciones' %}active{% endif %}">
+                          <i class="fas fa-list nav-icon"></i>
+                          <p>Listar</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{% url 'agregar_capacitacion' %}" class="nav-link {% if url_name == 'agregar_capacitacion' %}active{% endif %}">
+                          <i class="fas fa-plus nav-icon"></i>
+                          <p>Agregar Capacitación</p>
+                        </a>
+                      </li>                      
+                    </ul>
+                  </li>
+
+                  
+                  <li class="nav-item">
+                    <a href="{% url 'comunicaciones_M4' %}" class="nav-link {% if url_name == 'comunicaciones_M4' %}active{% endif %}">
+                      <i class="nav-icon far fa-envelope"></i>
+                      <p>
+                        Comunicaciones
+                        <span class="badge badge-info right"><!--2--></span>
+                      </p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="{% url 'listar_recordatorios' %}" class="nav-link {% if url_name == 'listar_recordatorios' %}active{% endif %}">
+                      <i class="nav-icon fas fa-calendar-check"></i>
+                      <p>
+                        Recordatorios
+                        <span class="badge badge-info right"><!--2--></span>
+                      </p>
+                    </a>
+                  </li>
+                  
+
+                  <li class="nav-item">
+                    <a href="{% url 'calendario_M4' %}" class="nav-link {% if url_name == 'calendario_M4' %}active{% endif %}">
+                      <i class="nav-icon far fa-calendar-alt"></i>
+                      <p>
+                        Calendario
+                        <span class="badge badge-info right"><!--2--></span>
+                      </p>
+                    </a>
+                  </li>
+
+                  <!-- espacio solo para el momento de desarrollo -->
+                  <li class="nav-item {% if url_name == 'listar_updates' or url_name == 'agregar_update' %}menu-open{% endif %}">
+                    <a href="#" class="nav-link  {% if url_name == 'listar_updates' or url_name == 'agregar_update' %}active{% endif %}">
+                      <i class="nav-icon fas fa-code text-blue"></i>
+                      <p class="text-lightblue">
+                        Pedidos a Desarrollo
+                        <i class="fas fa-angle-left right text-blue"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview ">
+                      <li class="nav-item">
+                        <a href="{% url 'listar_updates' %}" class="nav-link {% if url_name == 'listar_updates' %}active{% endif %}">
+                          <i class="fas fa-list nav-icon text-blue"></i>
+                          <p class="text-lightblue">Listar</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{% url 'agregar_update' %}" class="nav-link {% if url_name == 'agregar_update' %}active{% endif %}">
+                          <i class="fas fa-plus nav-icon text-blue"></i>
+                          <p class="text-lightblue">Agregar Pedido</p>
+                        </a>
+                      </li>                      
+                    </ul>
+                  </li>
+
+
+    
+            </ul>
+          </nav>
+          <!-- /.sidebar-menu -->
+        </div>
+        <!-- /.sidebar -->
+      </aside>
+      <!-- FIN MENU COSTADO ---------------->
+      {% endwith %}

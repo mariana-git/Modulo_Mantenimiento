@@ -1,0 +1,382 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %}
+{% load crispy_forms_tags %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %} {% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %} Update / Pedido {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <!-- TARJETA CON DATOS DEL PEDIDO-->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="fas fa-question-circle"></i>&nbsp; Datos de la Solicitud
+                    </h5>
+
+                    <div class="card-tools">
+                        <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                            <li>
+                                <span class="badge bg-estado-u d-none d-md-inline">Pedido {{u.estado|lower|capfirst}}</span>
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-column">
+                        <div class="row">
+                            <div class="col justify-content-center text-center">
+
+                                <div class="row d-md-none">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Estado</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-center">
+                                        <span class="badge bg-estado-u"> Pedido {{u.estado|lower|capfirst}}</span>
+                                    </div>
+                                </div>
+                                <hr class="hr2 d-md-none" />
+
+                                <div class="row">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Fecha</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        {{u.fecha_creacion.date}}
+                                    </div>
+                                </div>
+                                <hr class="hr2" />
+                                <div class="row">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Usuario</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        {{u.usuario |default_if_none:''}}
+                                    </div>
+                                </div>
+                                <hr class="hr2" />
+                                <div class="row">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Tipo de Pedido</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        {{u.tipo_pedido |default_if_none:''}}
+                                    </div>
+                                </div>
+                                <hr class="hr2" />
+                                <div class="row">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Cuando</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        {{u.cuando|default_if_none:''}}
+                                    </div>
+                                </div>
+                                <hr class="hr2" />
+                                <div class="row">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Hace</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        {{u.hace|default_if_none:''}}
+                                    </div>
+                                </div>
+                                <hr class="hr2" />
+                                <div class="row mb-4">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">deberia</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        {{u.deberia |default_if_none:''}}
+                                    </div>
+                                </div>
+                                
+                                <hr class="hr2" />
+                                <div class="row mb-2">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Archivos adjuntos</h6>
+                                    </div>
+                                    <div class="col-sm-auto ">
+                                        {% if up_pedido_adjuntos %}
+                                        <div class="col-sm-auto">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm text-left " >
+                                                    <tbody>
+                                                        {% for a in up_pedido_adjuntos %}
+                                                        <tr class="h5">
+                                                            {%if 'image' in a.tipo %}
+                                                            <th scope="row"><small><i
+                                                                        class="fas fa-file-image pr-1 text-pink"
+                                                                        title="{{a.nombre}}"></i>{{a.nombre|truncatechars:15}}</small>
+                                                            </th>
+                                                            <td><a href="{% url 'ver_imagenes' a.id a.referencia %}"
+                                                                    class="btn btn-tool ml-2"><i
+                                                                        class="fas fa-eye text-muted"
+                                                                        title="Ver imagen"></i></a></td>
+                                                            {%else%}
+                                                            <th scope="row"><small><i
+                                                                        class="fas fa-file-alt pr-1 text-muted"
+                                                                        title="{{a.nombre}}"></i>{{a.nombre|truncatechars:15}}</small>
+                                                            </th>
+                                                            <td><a href="{{a.archivo.url}}" class="btn btn-tool ml-2"
+                                                                    target="_blank"><i class="fas fa-eye text-muted"
+                                                                        title="Ver Archivo"></i></a></td>
+                                                            {%endif%}
+                                                            <td><a href="{{a.archivo.url}}" download
+                                                                    class="btn btn-tool ml-2"><i class="fas fa-download"
+                                                                        title="Descargar Archivo"></i></a></td>
+                                                            <td><i class="fas fa-trash btn btn-tool ml-2"
+                                                                    title="Eliminar Archivo" data-toggle="modal"
+                                                                    data-target="#modalBorrar" data-id="{{a.id}}"
+                                                                    data-objeto="archivo_{{a.referencia}}"></i>
+                                                            </td>
+                                                        </tr>
+                                                        {%endfor%}
+    
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        {% else %}
+                                        <div class="col-sm-auto">
+                                            <p class="text-muted pl-2">Sin archivos adjuntos.</p>
+                                        </div>
+                                        
+                                        {% endif %}
+                                    </div>
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- FIN TARJETA PEDIDO-->
+            <!-- TARJETA RESPUESTA DEL EQUIPO DE DESARROLLO -->
+            <div class="card collapsed-card mb-5">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="fas fa-code"></i>&nbsp; Datos de la Solución
+                    </h5>
+
+                    <div class="card-tools">
+                        <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                            <li>
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-column">
+                        <div class="row">
+                            <div class="col justify-content-center text-center">
+                                <div class="row">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Fecha Modificación</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        {{u.fecha_modificacion.date}}
+                                    </div>
+                                </div>
+                                <hr class="hr2" />
+                                <div class="row">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Tipo de Pedido Relevado</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        {{u.tipo_relevado |default_if_none:''}}
+                                    </div>
+                                </div>
+                                <hr class="hr2" />
+                                <div class="row">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Estado actual</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        {{u.estado |default_if_none:''}}
+                                    </div>
+                                </div>
+                                <hr class="hr2" />
+
+                                <div class="row">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Días estimados para respuesta</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        {{u.tiempo_estimado | default_if_none:"sin confirmar" }} días
+                                    </div>
+                                </div>
+                                <hr class="hr2" />
+                                
+                                <div class="row">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Devolución</h6>
+                                    </div>
+                                    <div class="col-sm-auto text-secondary text-left">
+                                        {{u.devolucion |default_if_none:''}}
+                                    </div>
+                                </div>
+                                <hr class="hr2" />
+                                <div class="row mb-2">
+                                    <div class="col-sm-auto">
+                                        <h6 class="mb-0 text-left">Archivos adjuntos</h6>
+                                    </div>
+                                    <div class="col-sm-auto ">
+                                        {% if up_devolucion_adjuntos %}
+                                        <div class="col-sm-auto">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm text-left ">
+                                                    <tbody>
+                                                        {% for a in up_devolucion_adjuntos %}
+                                                        <tr class="h5">
+                                                            {%if 'image' in a.tipo %}
+                                                            <th scope="row"><small><i
+                                                                        class="fas fa-file-image pr-1 text-pink"
+                                                                        title="{{a.nombre}}"></i>{{a.nombre|truncatechars:15}}</small>
+                                                            </th>
+                                                            <td><a href="{% url 'ver_imagenes' a.id a.referencia %}"
+                                                                    class="btn btn-tool ml-2"><i
+                                                                        class="fas fa-eye text-muted"
+                                                                        title="Ver imagen"></i></a></td>
+                                                            {%else%}
+                                                            <th scope="row"><small><i
+                                                                        class="fas fa-file-alt pr-1 text-muted"
+                                                                        title="{{a.nombre}}"></i>{{a.nombre|truncatechars:15}}</small>
+                                                            </th>
+                                                            <td><a href="{{a.archivo.url}}" class="btn btn-tool ml-2"
+                                                                    target="_blank"><i class="fas fa-eye text-muted"
+                                                                        title="Ver Archivo"></i></a></td>
+                                                            {%endif%}
+                                                            <td><a href="{{a.archivo.url}}" download
+                                                                    class="btn btn-tool ml-2"><i class="fas fa-download"
+                                                                        title="Descargar Archivo"></i></a></td>
+                                                            <td><i class="fas fa-trash btn btn-tool ml-2"
+                                                                    title="Eliminar Archivo" data-toggle="modal"
+                                                                    data-target="#modalBorrar" data-id="{{a.id}}"
+                                                                    data-objeto="archivo_{{a.referencia}}"></i>
+                                                            </td>
+                                                        </tr>
+                                                        {%endfor%}
+    
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        {% else %}
+                                        <div class="col-sm-auto">
+                                            <p class="text-muted pl-2">Sin archivos adjuntos.</p>
+                                        </div>
+                                        
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- FIN TARJETA RESPUESTA-->
+
+
+        </div>
+        <!-- ------ FIN COLUMNA PRINCIPAL ------------->
+        <!-- COLUMNA ACCIONES-->
+        <div class="col-lg-3">
+            <div class="sticky-top mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-check-circle"></i>&nbsp;Acciones
+                        </h5>
+                    </div>
+                    <div class="list-group">
+                        <a href="{% url 'modificar_update' u.id %}"
+                            class="list-group-item list-group-item-action">Modificar Respuesta</a>
+                        <a href="#" data-toggle="modal" data-target="#modalBorrar" data-objeto="pedido"
+                            class="list-group-item list-group-item-action bg-danger"><i class="fas fa-minus-circle"></i>
+                            Borrar Pedido</a>
+                    </div>
+                </div>
+
+            </div>
+            <!-- FIN COLUMNA ACCIONES -->
+        </div>
+    </div>
+</div>
+<!--#region --------------------------------MODALES----------------------------------------------  -->
+<!-- Modal BORRAR -->
+<div class="modal fade" id="modalBorrar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-danger">
+                <h5 class="modal-title" id="exampleModalLabel">Esta seguro que quiere borrar?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <form action="#" method="POST">
+                    {% csrf_token %}
+                    <input id="id_objeto_borrar" name="id_objeto_borrar" type="hidden" value="">
+                    <input id="objeto_borrar" name="objeto_borrar" type="hidden" value="">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    &nbsp;&nbsp;&nbsp;
+                    <button type="submit" name="borrado" class="btn btn-danger">Borrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--#endregion  -->
+{% endblock content%} {% block customJS %}
+<script>
+    $(document).ready(function () {
+
+         //cambio color del badge del estado del pedido   
+         $('.bg-estado-u').addClass(function () {
+            let estado = '{{u.estado}}';
+
+            if (estado == 'EN EVALUACIÓN') {
+                $(this).addClass('bg-gradient-orange');
+            } else if (estado == 'ACEPTADO') {
+                $(this).addClass('bg-gradient-green');
+            } else if (estado == 'RECHAZADO') {
+                $(this).addClass('bg-gradient-danger');
+            } else if (estado == 'CERRADO') {
+                $(this).addClass('bg-gradient-secondary');
+            } else {
+                $(this).addClass('bg-gradient-teal');
+            }
+        });
+
+        $('#modalBorrar').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var obj = button.data('objeto')
+            var modal = $(this)
+
+            modal.find('#id_objeto_borrar').attr("value", id)
+            modal.find('#objeto_borrar').attr("value", obj)
+        });
+        
+    });
+
+</script>
+
+{% endblock customJS %}

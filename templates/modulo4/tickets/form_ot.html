@@ -1,0 +1,120 @@
+{% extends "modulo4/layouts/base_mod4.html" %} {% load static %}
+{% load crispy_forms_tags %}
+
+<!-- BLOQUE CUSTOM HEAD-->
+{% block custom_head %} {% endblock custom_head %}
+<!--FIN BLOQUE CUSTOM HEAD-->
+
+<!-- BLOQUE TITULO-->
+{% block titulo %} Orden de Trabajo / Editar {%endblock titulo%}
+<!-- FIN BLOQUE TITULO-->
+
+<!-- BLOQUE CONTENIDO-->
+{% block content %}
+
+<div class="container">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            <!-- COLUMNA TICKET-->
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <i class="fas fa-toolbox"></i>&nbsp; Modificar Orden de Trabajo
+                        </h5>
+                        <div class="card-tools">
+                            <ul class="list-unstyled mb-0 d-flex justify-content-center">
+                                <li>
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-column mt-3">
+                            <div class="row">
+                                <div class="col-md-8 m-auto">
+                                    <div class="col align-items-center text-center">
+                                        <div class="card ">
+                                            <div class="container p-3">
+
+                                                <div class="row mt-5">
+                                                    <div class="col-sm-auto">
+                                                        <h6 class="mt-2 text-left">Presupuesto aprobado</h6>
+                                                    </div>
+                                                    <div class="col text-secondary text-left">
+                                                        {{ form.presup_aprobado | as_crispy_field}}
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-sm-auto">
+                                                        <h6 class="mt-2 text-left">Presupuesto ejecutado</h6>
+                                                    </div>
+                                                    <div class="col text-secondary text-left">
+                                                        {{ form.presup_ejecutado | as_crispy_field}}
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-sm-auto">
+                                                        <h6 class="mt-2 text-left">Presupuesto en ejecución</h6>
+                                                    </div>
+                                                    <div class="col text-secondary text-left">
+                                                        {{ form.presup_en_ejecucion | as_crispy_field}}
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-sm-auto">
+                                                        <h6 class="mt-2 text-left">Fecha Inicio</h6>
+                                                    </div>
+                                                    <div class="col text-secondary text-left">
+                                                        {{ form.fecha_inicio | as_crispy_field}}
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-sm-auto">
+                                                        <h6 class="mt-2 text-left">Fecha Finalización Prevista</h6>
+                                                    </div>
+                                                    <div class="col text-secondary text-left">
+                                                        {{ form.fecha_fin_prevista | as_crispy_field}}
+                                                    </div>
+                                                </div>
+                                               
+                                                <div class="row mt-3 mb-3 ">
+                                                    <div class="col-sm-auto">
+                                                        <h6 class="text-left">Agregar archivos</h6>
+                                                    </div>
+                                                    <div class="col text-secondary text-left ">
+                                                        {{ form.archivos | as_crispy_field}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!-- Botones -->
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <input type="submit" value="Modificar" class="btn btn-primary mr-2" />
+                                            <a href="{% url 'ticket' ot.ticket.id %}">
+                                                <input type="button" value="Volver al ticket"
+                                                    class="btn btn-secondary mr-2" />
+                                            </a>
+                                        </div>
+                                        <!-- FIN Botones --------->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock content%}
+{% block customJS %}
+
+
+{% endblock customJS %}
